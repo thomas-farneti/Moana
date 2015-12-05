@@ -1,5 +1,9 @@
 package it.unibo.moana;
 
-public class Ordine {
+import System.*;
 
+public class Ordine {
+    public static void main(String[] args){
+	System.out.println("test");
+    }
 }
