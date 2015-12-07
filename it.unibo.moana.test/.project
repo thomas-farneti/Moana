@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>it.unibo.moana</name>
-	<comment>Project it.unibo.moana created by Buildship.</comment>
+	<name>it.unibo.moana.test</name>
+	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -17,12 +17,12 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1449326264761</id>
+			<id>1449496369400</id>
 			<name></name>
 			<type>26</type>
 			<matcher>
@@ -31,7 +31,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1449326264773</id>
+			<id>1449496369407</id>
 			<name></name>
 			<type>26</type>
 			<matcher>

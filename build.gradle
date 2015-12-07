@@ -1,0 +1,22 @@
+allprojects {
+	apply plugin: 'eclipse'
+	
+	group = 'it.unibo.moana'
+	version = '0.1'
+}
+
+subprojects {
+	apply plugin: 'java'
+	
+	repositories {
+		mavenCentral()
+	}
+}
+
+eclipse {
+	project {
+		name = 'it.unibo.moana'
+		comment = 'Multi-Agent VRP Solver'
+		referencedProjects 'it.unibo.moana.core', 'it.unibo.moana.test'
+	}
+}
