@@ -1,7 +1,6 @@
 # Moana -Multi Agent Approach for VRP
 
-Thomas Farneti
-Enrico Benini
+[![Build Status](https://travis-ci.org/thomas-farneti/Moana.svg?branch=master)](https://travis-ci.org/thomas-farneti/Moana)
 
 ## Abstract ##
 The VRP falls into the category of the NP-hard problems and so it is difficult to solve it in reasonable time. It is based on interdigitation of two underlaying problems that are also NP-hard the Multiple Traveling Salesman Problem (MTSP) and Bin Packing Problem (BPP). A feasible solution to the VRP is a solution of MTSP that satisfies the capacity constraints.
