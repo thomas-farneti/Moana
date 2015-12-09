@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>it.unibo.moana</name>
-	<comment>Multi-Agent VRP Solver</comment>
-	<projects>
-		<project>it.unibo.moana.core</project>
-		<project>it.unibo.moana.test</project>
-	</projects>
+	<comment/>
+	<projects/>
 	<natures/>
 	<buildSpec/>
 	<linkedResources/>

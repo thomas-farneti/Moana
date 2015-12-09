@@ -1,0 +1,5 @@
+dependencies {
+	testCompile 'junit:junit:4.12'
+	compile project(':it.unibo.moana.messages')
+	compile project(':it.unibo.moana.core')
+}

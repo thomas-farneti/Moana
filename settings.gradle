@@ -1,1 +1,7 @@
-include 'it.unibo.moana.core','it.unibo.moana.test'
+include 'it.unibo.moana.core','it.unibo.moana.messages','it.unibo.moana.test'
+
+rootProject.name = 'it.unibo.moana'
+
+rootProject.children.each {
+it.buildFileName = it.name + '.gradle'
+}

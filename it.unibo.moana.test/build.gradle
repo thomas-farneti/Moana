@@ -1,4 +1,0 @@
-dependencies {
-	compile project(':it.unibo.moana.core')
-	testCompile 'junit:junit:4.12'
-}
