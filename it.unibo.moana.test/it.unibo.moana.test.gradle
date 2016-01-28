@@ -1,4 +1,6 @@
 dependencies {
+	testCompile 'com.google.inject:guice:3.0'
+	testCompile 'com.google.guava:guava:19.0'
 	testCompile 'junit:junit:4.12'
 	compile project(':it.unibo.moana.messages')
 	compile project(':it.unibo.moana.core')

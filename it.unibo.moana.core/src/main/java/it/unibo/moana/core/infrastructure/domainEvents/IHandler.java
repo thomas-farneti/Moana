@@ -1,6 +1,5 @@
 package it.unibo.moana.core.infrastructure.domainEvents;
 
-public interface IHandles<T>
+public interface IHandler
 {
-    void Handle(T message);
 }

@@ -63,3 +63,6 @@ hs_err_pid*
 
 .gradle/
 
+*.classpath
+it.unibo.moana.test/build/
+it.unibo.moana.core/.settings/

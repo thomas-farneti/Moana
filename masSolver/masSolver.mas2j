@@ -1,0 +1,12 @@
+MAS masSolver {
+
+	infrastructure: Centralised
+
+	environment: VrpEnv
+
+	agents:
+		agent1 sample_agent;
+
+	aslSourcePath:
+		"src/asl";
+}
