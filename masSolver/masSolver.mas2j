@@ -5,7 +5,8 @@ MAS masSolver {
 	environment: VrpEnv
 
 	agents:
-		agent1 sample_agent;
+		vehicle #5;
+		planner;
 
 	aslSourcePath:
 		"src/asl";
