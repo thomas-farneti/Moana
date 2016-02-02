@@ -1,4 +1,4 @@
-Objective
+Objective [![Build Status](https://travis-ci.org/thomas-farneti/Moana.svg?branch=master)](https://travis-ci.org/thomas-farneti/Moana)
 ===============
 
 With this project we want to provide a solution at the Vehicle Rooting Problem through a Multi-Agent System approach using the Jason platform.
