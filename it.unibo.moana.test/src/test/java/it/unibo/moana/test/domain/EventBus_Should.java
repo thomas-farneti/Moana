@@ -2,10 +2,10 @@ package it.unibo.moana.test.domain;
 
 import org.junit.Test;
 
-import it.unibo.moana.core.domain.Ordini.OrdiniService;
+import it.unibo.moana.core.domain.Orders.OrdersService;
 import it.unibo.moana.core.infrastructure.domainEvents.GuavaEventBus;
 import it.unibo.moana.core.infrastructure.domainEvents.IBus;
-import it.unibo.moana.messages.ordini.commands.AggiornaOrdineCmd;
+import it.unibo.moana.messages.orders.commands.UodateOrderCommand;
 
 public class EventBus_Should {
 
@@ -14,11 +14,11 @@ public class EventBus_Should {
 		
 		IBus bus = new GuavaEventBus();
 		
-		OrdiniService svc = new  OrdiniService(null, bus);
+		OrdersService svc = new  OrdersService(null, bus);
 		
 		bus.registerHandler(svc);
 		
-		bus.Send(new AggiornaOrdineCmd());
+		bus.Send(new UodateOrderCommand());
 		
 	}
 
