@@ -1,18 +1,23 @@
 // Environment code for project masSolver
 
-import jason.asSyntax.*;
-import jason.environment.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
+
+import jason.asSyntax.Structure;
+import jason.environment.Environment;
+import it.unibo.moana.core.infrastructure.domainEvents.*;
 
 public class VrpEnv extends Environment {
 
     private Logger logger = Logger.getLogger("masSolver."+VrpEnv.class.getName());
-
+    private IBus eventBus;
+    
     /** Called before the MAS execution with the args informed in .mas2j */
     @Override
     public void init(String[] args) {
         super.init(args);
-        addPercept(Literal.parseLiteral("percept(demo)"));
+        
+        clearAllPercepts();
+        eventBus = new GuavaEventBus();
     }
 
     @Override

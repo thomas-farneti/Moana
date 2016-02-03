@@ -4,7 +4,7 @@ import com.google.common.eventbus.Subscribe;
 
 import it.unibo.moana.core.infrastructure.domainEvents.IEventPublisher;
 import it.unibo.moana.core.infrastructure.domainEvents.IHandler;
-import it.unibo.moana.messages.orders.commands.UodateOrderCommand;
+import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
 import it.unibo.moana.messages.orders.events.OrderUpdatedEvent;
 
 public class OrdersService implements IHandler{
@@ -19,7 +19,7 @@ public class OrdersService implements IHandler{
 	}
 	
 	@Subscribe
-	public void Handle(UodateOrderCommand cmd){
+	public void Handle(UpdateOrderCommand cmd){
 		System.out.println("Handle Command");
 		publisher.Publish(new OrderUpdatedEvent());
 	}
