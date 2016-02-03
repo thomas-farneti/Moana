@@ -5,7 +5,7 @@ import org.junit.Test;
 import it.unibo.moana.core.domain.Orders.OrdersService;
 import it.unibo.moana.core.infrastructure.domainEvents.GuavaEventBus;
 import it.unibo.moana.core.infrastructure.domainEvents.IBus;
-import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
+import it.unibo.moana.messages.factories.UpdateOrderCommandFactory;
 
 public class EventBus_Should {
 
@@ -18,8 +18,6 @@ public class EventBus_Should {
 		
 		bus.registerHandler(svc);
 		
-		bus.Send(new UpdateOrderCommand());
-		
+		bus.Send(UpdateOrderCommandFactory.getInstance("1com", "command description", "1cli", "client descritpion", 1, 1));
 	}
-
 }

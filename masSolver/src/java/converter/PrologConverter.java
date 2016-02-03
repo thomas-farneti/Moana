@@ -9,11 +9,11 @@ public class PrologConverter {
 	
 	public static Literal toProlog(UpdateOrderCommand command){
 		return Literal.parseLiteral(String.format(ORDER_STRUCTURE, 
-				command.id,
-				command.description,
-				command.client.id,
-				command.client.description,
-				command.client.position.latitude,
-				command.client.position.longitude));
+				command.commandId,
+				command.commandDescription,
+				command.clientId,
+				command.clientDescription,
+				command.latitude,
+				command.longitude));
 	}
 }
