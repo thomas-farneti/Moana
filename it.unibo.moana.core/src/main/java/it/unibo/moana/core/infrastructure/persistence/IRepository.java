@@ -1,10 +1,14 @@
 package it.unibo.moana.core.infrastructure.persistence;
 
-public interface IRepository <T,V>{
+import java.util.Enumeration;
 
-	 void remove(T entity);
-	 void addOrUpdate(T entity); 
+import it.unibo.moana.core.domain.Entity;
+
+public interface IRepository <K,E extends Entity<K>>{
+
+	 void remove(E entity);
+	 void addOrUpdate(E entity); 
 	 
-	 T[] load(V[] ids);
-	 T load(V id);
+	 E[] load(Enumeration<K> ids);
+	 E load(K id);
 }

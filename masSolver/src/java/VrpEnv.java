@@ -19,7 +19,7 @@ public class VrpEnv extends Environment {
         
         clearAllPercepts();
         eventBus = new GuavaEventBus();
-        orderHandler = new OrderHandler(this);
+        orderHandler = new OrderHandler(this, null);
         eventBus.registerHandler(orderHandler);
     }
 

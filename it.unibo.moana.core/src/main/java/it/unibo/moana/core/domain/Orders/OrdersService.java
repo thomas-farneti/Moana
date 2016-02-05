@@ -21,6 +21,6 @@ public class OrdersService implements IHandler{
 	@Subscribe
 	public void Handle(UpdateOrderCommand cmd){
 		System.out.println("Handle Command");
-		publisher.Publish(new OrderUpdatedEvent());
+		publisher.Publish(new OrderUpdatedEvent(null));
 	}
 }
