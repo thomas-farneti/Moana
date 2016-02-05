@@ -2,6 +2,7 @@
 
 import java.util.logging.Logger;
 
+import input.gui.OrdersGui;
 import jason.asSyntax.Structure;
 import jason.environment.Environment;
 import services.OrderHandler;
@@ -21,6 +22,7 @@ public class VrpEnv extends Environment {
         eventBus = new GuavaEventBus();
         orderHandler = new OrderHandler(this, null);
         eventBus.registerHandler(orderHandler);
+        OrdersGui.LaunchGUI(eventBus);
     }
 
     @Override

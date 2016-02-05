@@ -5,8 +5,6 @@ import converter.PrologConverter;
 import it.unibo.moana.core.domain.Orders.IOrderRepository;
 import it.unibo.moana.core.domain.Orders.Order;
 import it.unibo.moana.core.infrastructure.domainEvents.IHandler;
-import it.unibo.moana.core.infrastructure.persistence.IRepository;
-import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
 import it.unibo.moana.messages.orders.events.OrderUpdatedEvent;
 import jason.asSyntax.Literal;
 import jason.environment.Environment;

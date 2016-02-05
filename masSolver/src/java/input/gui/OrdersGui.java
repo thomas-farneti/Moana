@@ -12,9 +12,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import it.unibo.moana.core.infrastructure.domainEvents.IBus;
+import it.unibo.moana.messages.factories.UpdateOrderCommandFactory;
+import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
+
 public class OrdersGui extends JPanel {
 
-  private JTextField[] fields;
+  private static JTextField[] fields;
 
   // Create a form with the specified labels, tooltips, and sizes.
   public OrdersGui(String[] labels, char[] mnemonics, int[] widths, String[] tips) {
@@ -47,5 +51,46 @@ public class OrdersGui extends JPanel {
   public String getText(int i) {
     return (fields[i].getText());
   }
+  
+  /**
+	 * Launch the application.
+	 */
+	public static void LaunchGUI(final IBus eventBus) {
+		String[] labels = { "Description:", "Client Description:", "Client Id:", "Demand:" ,"Longitude:", "Latitude:" };
+		char[] mnemonics = { 'C', 'D', 'I', 'Q','O', 'A' };
+		int[] widths = { 15, 15, 3, 3, 3, 3 };
+		String[] descs = { "Description:", "Client Description:", "Client Id:", "Demand:" ,"Longitude:", "Latitude:" };
+
+		final OrdersGui form = new OrdersGui(labels, mnemonics, widths, descs);
+
+		JButton submit = new JButton("Submit Order");
+
+		submit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				UpdateOrderCommand command = UpdateOrderCommandFactory.getInstance(
+						fields[0].getText(),
+						Double.valueOf(fields[3].getText()),
+						fields[2].getText(),
+						fields[1].getText(),
+						Double.valueOf(fields[4].getText()),
+						Double.valueOf(fields[5].getText()));
+				try {
+					eventBus.Send(command);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}				
+			}
+		});
+
+		JFrame f = new JFrame("Order Submission");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.getContentPane().add(form, BorderLayout.NORTH);
+		JPanel p = new JPanel();
+		p.add(submit);
+		f.getContentPane().add(p, BorderLayout.SOUTH);
+		f.pack();
+		f.setVisible(true);
+	}
 }
 

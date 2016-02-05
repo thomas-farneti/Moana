@@ -4,6 +4,7 @@ import it.unibo.moana.core.domain.Entity;
 
 public class Order extends Entity<String>{
 	public String description;
+	public Double demand;
 	protected Client client;
 	
 	public Order(String id, String description, Client client){

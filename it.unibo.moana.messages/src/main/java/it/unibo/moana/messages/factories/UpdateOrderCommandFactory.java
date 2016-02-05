@@ -4,15 +4,15 @@ import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
 
 public class UpdateOrderCommandFactory {
 	public static UpdateOrderCommand getInstance(
-			String commandId,
 			String commandDescription,
+			Double demand,
 			String clientId,
 			String clientDescription,
 			double longitude,
 			double latitude){
 		return new UpdateOrderCommand(
-				commandId,
 				commandDescription, 
+				demand,
 				clientId, 
 				clientDescription, 
 				latitude,
