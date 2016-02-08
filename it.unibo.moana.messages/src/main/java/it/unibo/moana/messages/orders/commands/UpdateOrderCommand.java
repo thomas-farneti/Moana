@@ -3,25 +3,25 @@ package it.unibo.moana.messages.orders.commands;
 import it.unibo.moana.messages.ICommand;
 
 public class UpdateOrderCommand implements ICommand{
-	public String commandDescription;
+	public String id;
+	public String description;
 	public String clientId;
 	public double demand;
-	public String clientDescription;
-	public double longitude;
-	public double latitude;
+	public double positionLatitude;
+	public double positionLongitude;
 
 	public UpdateOrderCommand(
-			String commandDescription,
+			String id,
+			String description,
 			Double demand,
-			String clientId, 
-			String clientDescription, 
+			String clientId,
 			double longitude,
 			double latitude){
-		this.commandDescription = commandDescription;
+		this.id = id;
+		this.description = description;
 		this.demand = demand;
 		this.clientId = clientId;
-		this.clientDescription = clientDescription;
-		this.latitude = latitude;
-		this.longitude = longitude;
+		this.positionLatitude = latitude;
+		this.positionLongitude = longitude;
 	}
 }

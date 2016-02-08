@@ -1,7 +1,5 @@
 package it.unibo.moana.messages.orders.events;
 
-import java.util.Enumeration;
-
 import it.unibo.moana.messages.IEvent;
 
 public class OrderUpdatedEvent implements IEvent {

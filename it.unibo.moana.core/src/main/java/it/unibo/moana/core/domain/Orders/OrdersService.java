@@ -9,18 +9,24 @@ import it.unibo.moana.messages.orders.events.OrderUpdatedEvent;
 
 public class OrdersService implements IHandler{
 	
-	@SuppressWarnings("unused")
-	private IOrderRepository repo;
+	private IOrdersRepository repo;
 	private IEventPublisher publisher;
 	
-	public OrdersService(IOrderRepository repo, IEventPublisher publisher){
+	public OrdersService(IOrdersRepository repo, IEventPublisher publisher){
 		this.repo = repo;
 		this.publisher = publisher;
 	}
 	
 	@Subscribe
 	public void Handle(UpdateOrderCommand cmd){
-		System.out.println("Handle Command");
-		publisher.Publish(new OrderUpdatedEvent(null));
+		Order o = repo.load(cmd.id);
+		
+		if(o == null)
+		{
+			o = new Order(cmd.id, cmd.description, null);
+			repo.addOrUpdate(o);
+		}
+		
+		publisher.Publish(new OrderUpdatedEvent(cmd.id));
 	}
 }

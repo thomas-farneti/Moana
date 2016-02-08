@@ -1,7 +1,7 @@
 package it.unibo.moana.persistence;
 
-import java.util.Collections;
-import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import it.unibo.moana.core.domain.Entity;
@@ -26,8 +26,11 @@ public class FakeRepository <K,E extends Entity<K>> implements IRepository<K,E> 
 	}
 
 	@Override
-	public E[] load(Enumeration<K> ids) {
-		return (E[]) records.entrySet().stream().filter(i -> Collections.list(ids).stream().anyMatch(x -> x == i.getKey())).map(y-> y.getValue()).toArray();
+	public Collection<E> load(Collection<K> ids) {
+		Collection<E> result = new ArrayList<>();
+		
+		records.entrySet().stream().filter(e-> ids.contains(e.getKey())).map(m-> m.getValue()).forEach(v -> result.add(v));
+		return result;
 	}
 
 	@Override

@@ -1,12 +1,12 @@
 package it.unibo.moana.persistence.orders;
 
-import java.util.Enumeration;
+import java.util.Collection;
 
-import it.unibo.moana.core.domain.Orders.IOrderRepository;
+import it.unibo.moana.core.domain.Orders.IOrdersRepository;
 import it.unibo.moana.core.domain.Orders.Order;
 import it.unibo.moana.core.infrastructure.persistence.IRepository;
 
-public class OrdersRepository implements IOrderRepository {
+public class OrdersRepository implements IOrdersRepository {
 
 	private IRepository<String, Order> repository;
 	
@@ -25,7 +25,7 @@ public class OrdersRepository implements IOrderRepository {
 	}
 
 	@Override
-	public Order[] load(Enumeration<String> ids) {
+	public Collection<Order> load(Collection<String> ids) {
 		return repository.load(ids);
 	}
 

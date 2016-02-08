@@ -3,8 +3,6 @@ package input.gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,9 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import it.unibo.moana.core.infrastructure.domainEvents.IBus;
-import it.unibo.moana.messages.factories.UpdateOrderCommandFactory;
-import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
 
+@SuppressWarnings("serial")
 public class OrdersGui extends JPanel {
 
   private static JTextField[] fields;
@@ -65,23 +62,7 @@ public class OrdersGui extends JPanel {
 
 		JButton submit = new JButton("Submit Order");
 
-		submit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				UpdateOrderCommand command = UpdateOrderCommandFactory.getInstance(
-						fields[0].getText(),
-						Double.valueOf(fields[3].getText()),
-						fields[2].getText(),
-						fields[1].getText(),
-						Double.valueOf(fields[4].getText()),
-						Double.valueOf(fields[5].getText()));
-				try {
-					eventBus.Send(command);
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}				
-			}
-		});
+		submit.addActionListener(null);
 
 		JFrame f = new JFrame("Order Submission");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

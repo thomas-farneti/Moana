@@ -2,25 +2,23 @@
 
 import java.util.logging.Logger;
 
-import input.gui.OrdersGui;
 import jason.asSyntax.Structure;
 import jason.environment.Environment;
-import services.OrderHandler;
 
 public class VrpEnv extends Environment {
 
     private Logger logger = Logger.getLogger("masSolver."+VrpEnv.class.getName());
     //private IBus eventBus;
-    private OrderHandler orderHandler;
+    //private OrderHandler orderHandler;
     /** Called before the MAS execution with the args informed in .mas2j */
     @Override
     public void init(String[] args) {
         super.init(args);
         
         clearAllPercepts();
-        orderHandler = new OrderHandler(this, null);
-        eventBus.registerHandler(orderHandler);
-        OrdersGui.LaunchGUI(eventBus);
+        //orderHandler = new OrderHandler(this, null);
+        //eventBus.registerHandler(orderHandler);
+        //OrdersGui.LaunchGUI(eventBus);
     }
 
     @Override
