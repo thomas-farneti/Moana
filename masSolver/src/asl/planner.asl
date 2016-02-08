@@ -1,70 +1,37 @@
+// Agent planner in project masSolver
+
 /* Initial beliefs and rules */
-
-all_proposals_received(CNPId) 
-  :- .count(introduction(participant,_),NP) & // number of participants
-     .count(propose(CNPId,_), NO) &           // number of proposes received
-     .count(refuse(CNPId), NR) &              // number of refusals received
-     NP = NO + NR.
-
+all_proposals_received 
+  :- .count(vehicle(_),NV) & // number of participants
+     .count(proposalOrder(_,_,_), NO) &           // number of proposes received
+     .count(refuse(_), NR) &              // number of refusals received
+     NV = NO + NR.
+     
 /* Initial goals */
-
-!startCNP(1,fix(computer)).
-//!startCNP(2,banana).
 
 /* Plans */
 
-// start the CNP
-+!startCNP(Id,Task) 
-   <- .print(" Waiting participants for task ",Task,"...");
-      .wait(2000);  // wait participants introduction
-      +cnp_state(Id,propose);   // remember the state of the CNP
-      .findall(Name,introduction(participant,Name),LP);
-      .print("Sending CFP to ",LP);
-      .send(LP,tell,cfp(Id,Task));
-      // the deadline of the CNP is now + 4 seconds, so
-      // the event +!contract(Id) is generated at that time
-      .at("now +4 seconds", { +!contract(Id) }).
++!planOrder(order(Content)) : true <- .print("Parte CNP");
+	.findall(V,vehicle(V),VS);
+	.send(VS,tell,pendingOrder(Content)).
 
++vehicle(Name) : true <- .print("Welcome to ", Name).
 
-// receive proposal 
-// if all proposal have been received, don't wait for the deadline
-@r1 +propose(CNPId,_Offer)
-   :  cnp_state(CNPId,propose) & all_proposals_received(CNPId)
-   <- !contract(CNPId).
++order(Content) : .count(vehicle(_),NV) & NV >0 <- .print("Pianifico Ordine");
+	!planOrder(order(Content));
+	-order(Content)[source(_)].
 
-// receive refusals   
-@r2 +refuse(CNPId) 
-   :  cnp_state(CNPId,propose) & all_proposals_received(CNPId)
-   <- !contract(CNPId).
++proposalOrder(Content,Me,Cost)[source(A)] : 
+	all_proposals_received 
+	<- .print("Dio caneee ",A);
+	!contract.
 
-// this plan needs to be atomic so as not to accept
-// proposals or refusals while contracting
-@lc1[atomic]
-+!contract(CNPId)
-   :  cnp_state(CNPId,propose)
-   <- -cnp_state(CNPId,_);
-      +cnp_state(CNPId,contract);  
-      .findall(offer(O,A),propose(CNPId,O)[source(A)],L);
-      .print("Offers are ",L);
-      L \== []; // constraint the plan execution to at least one offer
-      .min(L,offer(WOf,WAg)); // sort offers, the first is the best
-      .print("Winner is ",WAg," with ",WOf);
-      !announce_result(CNPId,L,WAg);
-      -+cnp_state(CNPId,finished).
-
-// nothing todo, the current phase is not 'propose'
-@lc2 +!contract(_). 
-
--!contract(CNPId)
-   <- .print("CNP ",CNPId," has failed!").
-
-+!announce_result(_,[],_).
-// announce to the winner
-+!announce_result(CNPId,[offer(_,WAg)|T],WAg) 
-   <- .send(WAg,tell,accept_proposal(CNPId));
-      !announce_result(CNPId,T,WAg).
-// announce to others
-+!announce_result(CNPId,[offer(_,LAg)|T],WAg) 
-   <- .send(LAg,tell,reject_proposal(CNPId));
-      !announce_result(CNPId,T,WAg).
-
++!contract: true
+	<- .print("Guardo chi va bene");
+	.findall(x(Content,Me,Cost),proposalOrder(Content,Me,Cost),L);
+	.print(L);
+	L \== [];
+	.min(L,x(A,B,C)); // sort offers, the first is the best
+  	.print("Winner so the order is ",B," with cost ",C," of the order ",A).
+  	/* TODO: Inviare a tutti chi ha vinto e cancellare le proposte */
+	

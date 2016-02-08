@@ -1,28 +1,29 @@
-// gets the price for the product,
-// a random value between 100 and 110.
-price(_Service,X) :- .random(R) & X = (10*R)+100.
+// Agent vehicle in project masSolver
 
-plays(initiator,planner). 
+/* Initial beliefs and rules */
+
+canChallengeOrder(VehicleCapacity,OrderCapacity) :- VehicleCapacity >= OrderCapacity.
+
+vehicleCapacity(100).
+
+/* Initial goals */
+
+!start.
 
 /* Plans */
 
-// send a message to the initiator introducing myself as a participant
-+plays(initiator,In)
-   :  .my_name(Me)
-   <- .send(In,tell,introduction(participant,Me)).
++!start : .my_name(Me) <- 
+	.print("Hello I'm ",Me);
+	.send(planner,tell,vehicle(Me));
+	.wait(2000);
+	.send(planner,tell,order(100));.
 
-// answer to Call For Proposal   
-@c1 +cfp(CNPId,Task)[source(A)]
-   :  plays(initiator,A) & price(Task,Offer)
-   <- +proposal(CNPId,Task,Offer); // remember my proposal
-      .send(A,tell,propose(CNPId,Offer)).
++!testCuurentCapacity(Content) : vehicleCapacity(V) & canChallengeOrder(Content,V) <- .print("I Can challenge for the order").
 
-@r1 +accept_proposal(CNPId)
-   :  proposal(CNPId,Task,Offer)
-   <- .print("My proposal '",Offer,"' won CNP ",CNPId, " for ",Task,"!").
-      // do the task and report to initiator
-      
-@r2 +reject_proposal(CNPId)
-   <- .print("I lost CNP ",CNPId, ".");
-      -proposal(CNPId,_,_). // clear memory
-
++pendingOrder(Content) : true <- .print("Vehicle receved pending order");
+	!testCuurentCapacity(Content);
+	.print("Send back my proposal");
+	.my_name(Me);
+	/* Custom action for the computation of the Cost */
+	.random(Cost);
+	.send(planner, tell, proposalOrder(Content,Me,Cost)).
