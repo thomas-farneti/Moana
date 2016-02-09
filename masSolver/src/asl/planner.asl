@@ -12,6 +12,7 @@ all_proposals_received(OrderID)
 /* Plans */
 
 +!planOrder(order(OrderID,Content)) : true <- .print("Parte CNP");
+	+order_planned(OrderID,plan);
 	.findall(V,vehicle(V),VS);
 	.send(VS,tell,pendingOrder(OrderID,Content)).
 
@@ -22,19 +23,27 @@ all_proposals_received(OrderID)
 	-order(OrderID,Content).
 
 +proposalOrder(OrderID,Proposer,Cost): 
-	all_proposals_received(OrderID)
+	order_planned(OrderID,plan) & all_proposals_received(OrderID)
+	<- .print("All proposal received ",OrderID);
+	!contract(OrderID).
+
++refusalOrder(OrderID,Proposer): 
+	order_planned(OrderID,plan) & all_proposals_received(OrderID)
 	<- .print("All proposal received ",OrderID);
 	!contract(OrderID).
 
 @r1 [atomic]
-+!contract(OrderID): true
-	<- .print("Check for winner of the order ", OrderID);
++!contract(OrderID): order_planned(OrderID,plan)
+	<- -order_planned(OrderID,_);
+	   +order_planned(OrderID,challenge); 
+	  .print("Check for winner of the order ", OrderID);
 	  .findall(offer(C,P),proposalOrder(OrderID,P,C),L);
       .print("Offers are ",L);
       L \== []; 
       .min(L,offer(WAg,WOf));
       .print("Winner is ",WOf," with ",WAg);
-      !announce_result(OrderID,L,WOf).
+      !announce_result(OrderID,L,WOf);
+      -+order_planned(OrderID,finished).
   	  /* TODO: Inviare a tutti chi ha vinto e cancellare le proposte */
   	
 +!announce_result(_,[],_).
