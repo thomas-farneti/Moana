@@ -6,31 +6,13 @@ all_proposals_received(OrderID)
      .count(proposalOrder(OrderID,_,_), NO) &           // number of proposes received
      .count(refuse(_), NR) 					&			// number of refusals received
      NV = NO + NR.
-     
-/* Initial goals */
 
-/* Plans */
+/* Goal's Plans */
 
 +!planOrder(order(OrderID,Content)) : true <- .print("Parte CNP");
 	+order_planned(OrderID,plan);
 	.findall(V,vehicle(V),VS);
 	.send(VS,tell,pendingOrder(OrderID,Content)).
-
-+vehicle(Name) : true <- .print("Welcome to ", Name).
-
-+order(OrderID,Content) : .count(vehicle(_),NV) & NV >0 <- .print("Pianifico Ordine");
-	!planOrder(order(OrderID,Content));
-	-order(OrderID,Content).
-
-+proposalOrder(OrderID,Proposer,Cost): 
-	order_planned(OrderID,plan) & all_proposals_received(OrderID)
-	<- .print("All proposal received ",OrderID);
-	!contract(OrderID).
-
-+refusalOrder(OrderID,Proposer): 
-	order_planned(OrderID,plan) & all_proposals_received(OrderID)
-	<- .print("All proposal received ",OrderID);
-	!contract(OrderID).
 
 @r1 [atomic]
 +!contract(OrderID): order_planned(OrderID,plan)
@@ -61,3 +43,28 @@ all_proposals_received(OrderID)
    	  .print("Delete the proposal of", LAg);
    	  -proposalOrder(OrderID,LAg,_)[source(LAg)];
       !announce_result(OrderID,T,WAg).
+
+/* Belief's Plans */
+
++vehicle(Name) : true <- .print("Welcome to ", Name).
+
++order(OrderID,Content) : .count(vehicle(_),NV) & NV >0 <- .print("Pianifico Ordine");
+	!planOrder(order(OrderID,Content));
+	-order(OrderID,Content).
+
++proposalOrder(OrderID,Proposer,Cost): 
+	order_planned(OrderID,plan) & all_proposals_received(OrderID)
+	<- .print("All proposal received ",OrderID);
+	!contract(OrderID).
+
++refusalOrder(OrderID,Proposer): 
+	order_planned(OrderID,plan) & all_proposals_received(OrderID)
+	<- .print("All proposal received ",OrderID);
+	!contract(OrderID).
+	
+/*
+ * Sistemare il fatto di andare a prendere gli ordini dall'environment e non da messaggi dei veicoli come al momento.
+ * Controllare che poi tutto funzioni, soprattutto le cose dipendenti da [source()].
+ * Aggiungere il piano per la cancellazione di un veicolo quando questo e' pieno e lo comunica.
+ * Aggiungere il fatto che, se nessuno risponde con un'offerta viene creato un nuovo veicolo.
+ */
