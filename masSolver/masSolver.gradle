@@ -1,0 +1,36 @@
+ant.importBuild('build.xml') { antTargetName ->
+    'a-' + antTargetName
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/asl'
+            srcDir 'src/java'
+        }
+    }
+}
+
+eclipse {
+  project {
+    name = 'masSolver'
+
+    natures 'org.eclipse.jdt.core.javanature', 'org.eclipse.xtext.ui.shared.xtextNature', 'jasonide.jasonNature'
+  }
+}
+
+dependencies {
+	compile 'com.google.guava:guava:19.0'
+	compile 'net.sf.jason:jason:1.4.1'
+	compile project(':it.unibo.moana.messages')
+	compile project(':it.unibo.moana.core')
+	compile project(':it.unibo.moana.persistence')
+}
+
+task copyDependencies(type: Copy) {
+   from configurations.compile
+   into 'lib'
+}
+
+build.dependsOn(copyDependencies)
+build.dependsOn('a-compile')

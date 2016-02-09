@@ -63,3 +63,5 @@ hs_err_pid*
 *.classpath
 it.unibo.moana.test/build/
 it.unibo.moana.core/.settings/
+
+.project

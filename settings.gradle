@@ -1,4 +1,4 @@
-include 'it.unibo.moana.core','it.unibo.moana.messages','it.unibo.moana.test','it.unibo.moana.persistence'
+include 'it.unibo.moana.core','it.unibo.moana.messages','it.unibo.moana.test','it.unibo.moana.persistence','masSolver'
 
 rootProject.name = 'it.unibo.moana'
 
