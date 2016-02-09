@@ -6,6 +6,8 @@ MAS masSolver {
 
 	agents:
 		testAgent;
+		planner;
+		vehicle #3;
 
 	classpath: 
 	"../it.unibo.moana.core/build/classes/main";
