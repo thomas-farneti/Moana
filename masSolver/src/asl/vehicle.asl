@@ -27,3 +27,9 @@ vehicleCapacity(100).
 	/* Custom action for the computation of the Cost */
 	.random(Cost);
 	.send(planner, tell, proposalOrder(OrderID,Me,Cost)).
+
++accept_proposal(OrderID) : true <- .print("I have to plan this shit ",OrderID ," and reduce my capacity").
+
++reject_proposal(OrderID) : true <- 
+	.print("Planner SCREW YOU MOTHERFUCKER!!");
+	-pendingOrder(OrderID,_)[source(planner)].
