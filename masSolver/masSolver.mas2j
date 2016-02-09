@@ -5,9 +5,15 @@ MAS masSolver {
 	environment: VrpEnv
 
 	agents:
-		planner;
-		vehicle #3;
+		testAgent;
+
+	classpath: 
+	"../it.unibo.moana.core/build/classes/main";
+	"../it.unibo.moana.messages/build/classes/main";
+	"../it.unibo.moana.persistence/build/classes/main";
+
 
 	aslSourcePath:
 		"src/asl";
+		
 }

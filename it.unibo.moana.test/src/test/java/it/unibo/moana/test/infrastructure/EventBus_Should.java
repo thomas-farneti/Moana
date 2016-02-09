@@ -1,34 +1,36 @@
-package it.unibo.moana.test.domain;
+package it.unibo.moana.test.infrastructure;
 
-import java.util.Arrays;
+import static org.junit.Assert.*;
+
 import java.util.UUID;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-import it.unibo.moana.core.domain.Orders.IOrdersReadModel;
+import com.google.common.eventbus.Subscribe;
+
 import it.unibo.moana.core.domain.Orders.IOrdersRepository;
 import it.unibo.moana.core.domain.Orders.Order;
-import it.unibo.moana.core.domain.Orders.OrdersReadModel;
 import it.unibo.moana.core.domain.Orders.OrdersService;
 import it.unibo.moana.core.infrastructure.domainEvents.GuavaEventBus;
 import it.unibo.moana.core.infrastructure.domainEvents.IBus;
+import it.unibo.moana.core.infrastructure.domainEvents.IHandler;
 import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
-import it.unibo.moana.messages.orders.query.GetOrdersDetailsByIds;
-import it.unibo.moana.messages.orders.query.GetOrdersDetailsByIdsResult;
+import it.unibo.moana.messages.orders.events.OrderUpdatedEvent;
 import it.unibo.moana.persistence.FakeRepository;
 import it.unibo.moana.persistence.orders.OrdersRepository;
 
-public class EventBus_Should {
+public class EventBus_Should implements IHandler {
 
+	protected String orderIdEvent;
 	@Test
-	public void test() throws Exception {	 		
+	public void test() throws Exception {
 		IBus bus = new GuavaEventBus();
 		IOrdersRepository repo = new OrdersRepository(new FakeRepository<String,Order>());
 		
 		OrdersService svc = new  OrdersService(repo, bus);
 		
 		bus.registerHandler(svc);
+		bus.registerHandler(this);
 		
 		String id = UUID.randomUUID().toString();
 		
@@ -36,13 +38,14 @@ public class EventBus_Should {
 		
 		bus.Send(cmd);
 		
-		IOrdersReadModel rm = new OrdersReadModel(repo);
+		Thread.sleep(2000);
 		
-		GetOrdersDetailsByIds query = new GetOrdersDetailsByIds();
-		query.Ids= Arrays.asList(new String[]{id});
-		
-		GetOrdersDetailsByIdsResult res =  rm.Query(query);
-		
-		Assert.assertTrue("OK", res.OrdersDetails[0].Id == id);
+		assertTrue(id == this.orderIdEvent);
 	}
+	
+	@Subscribe
+	protected void handle(OrderUpdatedEvent e){
+		this.orderIdEvent = e.getId();
+	}
+
 }
