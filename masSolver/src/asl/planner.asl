@@ -21,12 +21,15 @@ all_proposals_received(OrderID)
 	  .print("[WinnerCheck] Order->", OrderID);
 	  .findall(offer(C,P),proposalOrder(OrderID,P,C),L);
       .print("[Offers] ",L);
-      L \== []; 
+      !winnerCheck(L,OrderID).
+       
+
+@r2 [atomic]
++!winnerCheck(L,OrderID) : L \== [] <- 
       .min(L,offer(WAg,WOf));
       .print("[Winner] ",WOf," [Cost] ",WAg);
       !announce_result(OrderID,L,WOf);
       -+order_planned(OrderID,finished).
-  	  /* TODO: Inviare a tutti chi ha vinto e cancellare le proposte */
   	
 +!announce_result(_,[],_).
 // announce to the winner
