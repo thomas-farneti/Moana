@@ -7,7 +7,7 @@ MAS masSolver {
 	agents:
 		testAgent;
 		planner;
-		vehicle #3;
+		vehicle;
 
 	aslSourcePath:
 		"src/asl";

@@ -6,11 +6,10 @@ canChallengeOrder(VehicleCapacity,OrderCapacity) :- VehicleCapacity >= OrderCapa
 full(Capacity) :- Capacity <= 10.
 
 vehicleCapacity(100).
-
+charging.
 /* Initial goals */
 
 !start.
-!stop.
 
 /* Goal's Plans */
 
@@ -18,15 +17,21 @@ vehicleCapacity(100).
 	.print("[Hello] ",Me);
 	.send(planner,tell,vehicle(Me)).
 
-+!stop : vehicleCapacity(V) & full(V) & not pendingOrder(_,_) <-
+//+!stop(V) : charging & ~full(V).
+
++!stop(V) : charging & full(V) <-
 	.print("[DeleteFromPlanner]");
 	.my_name(Me); 
-	.send(planner,tell,deleteVehicle(me)).
+	-charging;
+	.send(planner,tell,deleteVehicle(Me)).
 	/* qua poi devi salvare i tuoi risultati */
 
+@r1 [atomic]
 +!testCurentCapacity(OrderID,Content) : vehicleCapacity(V) & canChallengeOrder(V,Content) <- 
 	.print("[CanChallenge] ",V," [OrderContent] ",Content);
 	.my_name(Me);
+	-+vehicleCapacity(V-Content);
+	+pendingCapacity(OrderID);
 	/* Custom action for the computation of the Cost */
 	.random(Cost);
 	.send(planner, tell, proposalOrder(OrderID,Me,Cost)).
@@ -37,22 +42,32 @@ vehicleCapacity(100).
 	/* Custom action for the computation of the Cost */
 	.send(planner, tell, refusalOrder(OrderID,Me));
 	-pendingOrder(OrderID,Content)[source(_)].
-	
+
+@r2 [atomic]
++!restoreCapacity(OrderID) : vehicleCapacity(V) & pendingOrder(OrderID,Content) <-
+    -+vehicleCapacity(V + Content);
+    -pendingOrder(OrderID,_)[source(planner)].
 
 /* Belief's Plans */
 
-+pendingOrder(OrderID,Content) : true <- !testCurentCapacity(OrderID,Content).
++pendingOrder(OrderID,Content) : charging <- !testCurentCapacity(OrderID,Content).
++pendingOrder(OrderID,Content) : not charging <- 
+   .print("i'm dead.");
+   .send(planner, tell, refusalOrder(OrderID,Me)).
 
-+accept_proposal(OrderID) : true <- 
++accept_proposal(OrderID) : vehicleCapacity(V) <- 
     .print("[AssegnedOrder] ", OrderID);
 	-accept_proposal(OrderID)[source(_)];
 	-pendingOrder(OrderID,Content)[source(planner)];
-	+orderToServe(OrderID,Content).
-	
+	+orderToServe(OrderID,Content);
+	-pendingCapacity(OrderID)[source(_)];
+	!stop(V).
+
 +reject_proposal(OrderID) : true <- 
 	.print("[RejectedOrder]");
-	-pendingOrder(OrderID,_)[source(planner)];
-	-reject_proposal(OrderID)[source(planner)].
+	-reject_proposal(OrderID)[source(planner)];
+	-pendingCapacity(OrderID)[source(_)];
+	!restoreCapacity(OrderID).
 	
 /*
  * DONE  --------- Fare un refactoring percui l'invio della mia proposta la faccio solamente se ho la capacita' per gestirlo, altrimenti mando un refusal (consigliato, agire sul contesto, stesso trigger event ma contesto diverso in base se ho o meno capacita'.

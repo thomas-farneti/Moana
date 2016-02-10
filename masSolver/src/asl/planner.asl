@@ -7,16 +7,23 @@ all_proposals_received(OrderID)
      .count(refusalOrder(OrderID,_), NR) 	&			// number of refusals received
      NV = NO + NR.
 
-listIsEmpty(L) :- L \== [].
-
 /* Goal's Plans */
 // When an order arrive is planned
 +!planOrder(order(OrderID,Content)) : true <- .print("[Start CNP]");
 	+order_planned(OrderID,plan);
 	.findall(V,vehicle(V),VS);
 	.length(VS,Challengers);
+	!sendProposal(Challengers,VS,OrderID,Content).
+
++!sendProposal(Challengers,VS,OrderID,Content) : Challengers \== 0 <- 
 	+proposalSended(OrderID,Challengers);
 	.send(VS,tell,pendingOrder(OrderID,Content)).
+
++!sendProposal(Challengers,VS,OrderID,Content) : Challengers == 0 <-
+    .create_agent(B, "/vehicle.asl");
+    .send(B,tell,pendingOrder(OrderID,Content));
+    .send(B,tell,accept_proposal(OrderID)).
+    
 
 // The assignment for the order start.
 @r1 [atomic]
@@ -75,7 +82,7 @@ listIsEmpty(L) :- L \== [].
 +vehicle(Name) : true <- .print("[Welcome] ", Name).
 
 // New order arrive and is planned directly if vehicles exists
-+order(OrderID,Content) : .count(vehicle(_),NV) & NV >0 <- .print("[OrderArrived]");
++order(OrderID,Content) : true <- .print("[OrderArrived]");
 	!planOrder(order(OrderID,Content)).
 
 // proposals and refusals hadlers.
@@ -91,7 +98,7 @@ listIsEmpty(L) :- L \== [].
 
 +deleteVehicle(V): true <- 
 	-deleteVehicle(V)[source(_)];
-	-vehicle(V).
+	-vehicle(V)[source(_)].
 
 //cleanUP events
 +proposalOrder(OrderID,Proposer,Cost): order_planned(OrderID,finished) <- -proposalOrder(OrderID,Proposer,Cost)[source(_)].
