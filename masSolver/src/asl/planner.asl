@@ -50,7 +50,7 @@ all_proposals_received(OrderID)
 
 +order(OrderID,Content) : .count(vehicle(_),NV) & NV >0 <- .print("Pianifico Ordine");
 	!planOrder(order(OrderID,Content));
-	-order(OrderID,Content).
+	-order(OrderID,Content)[source(_)].
 
 +proposalOrder(OrderID,Proposer,Cost): 
 	order_planned(OrderID,plan) & all_proposals_received(OrderID)
