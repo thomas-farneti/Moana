@@ -32,8 +32,8 @@ all_proposals_received(OrderID)
       -+order_planned(OrderID,finished).
 
 // previous plan sub-plan.
-@r2 [atomic]
-+!winnerCheck(L,OrderID) : L == []. 
+@r3 [atomic]
++!winnerCheck(L,OrderID) : L == [] <- .print("Farne Frocio").
   	
 +!announce_result(_,[],_).
 // announce to the winner
