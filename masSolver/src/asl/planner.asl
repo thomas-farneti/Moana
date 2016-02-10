@@ -8,12 +8,13 @@ all_proposals_received(OrderID)
      NV = NO + NR.
 
 /* Goal's Plans */
-
+// When an order arrive is planned
 +!planOrder(order(OrderID,Content)) : true <- .print("Parte CNP");
 	+order_planned(OrderID,plan);
 	.findall(V,vehicle(V),VS);
 	.send(VS,tell,pendingOrder(OrderID,Content)).
 
+// The assignment for the order start.
 @r1 [atomic]
 +!contract(OrderID): order_planned(OrderID,plan)
 	<- -order_planned(OrderID,_);
@@ -22,14 +23,17 @@ all_proposals_received(OrderID)
 	  .findall(offer(C,P),proposalOrder(OrderID,P,C),L);
       .print("[Offers] ",L);
       !winnerCheck(L,OrderID).
-       
-
+// previous plan sub-plan.
 @r2 [atomic]
 +!winnerCheck(L,OrderID) : L \== [] <- 
       .min(L,offer(WAg,WOf));
       .print("[Winner] ",WOf," [Cost] ",WAg);
       !announce_result(OrderID,L,WOf);
       -+order_planned(OrderID,finished).
+
+// previous plan sub-plan.
+@r2 [atomic]
++!winnerCheck(L,OrderID) : L == []. 
   	
 +!announce_result(_,[],_).
 // announce to the winner
@@ -47,12 +51,15 @@ all_proposals_received(OrderID)
 
 /* Belief's Plans */
 
+// New vehicle start
 +vehicle(Name) : true <- .print("[Welcome] ", Name).
 
+// New order arrive and is planned directly if vehicles exists
 +order(OrderID,Content) : .count(vehicle(_),NV) & NV >0 <- .print("Pianifico Ordine");
 	!planOrder(order(OrderID,Content));
 	-order(OrderID,Content)[source(_)].
 
+// proposals and refusals hadlers.
 +proposalOrder(OrderID,Proposer,Cost): 
 	order_planned(OrderID,plan) & all_proposals_received(OrderID)
 	<- .print("[proposalReceived] ",OrderID);
