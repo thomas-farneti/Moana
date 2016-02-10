@@ -45,7 +45,7 @@ listIsEmpty(L) :- L \== [].
     -+order_planned(OrderID,finished);
     -proposalSended(OrderID,_);
     !deleteAllRefusal(OrderID);
-    .create_agent(B, "/bigVehicle.asl");
+    .create_agent(B, "/vehicle.asl");
     .send(B,tell,pendingOrder(OrderID,Content));
     .send(B,tell,accept_proposal(OrderID)).
   	
@@ -88,7 +88,11 @@ listIsEmpty(L) :- L \== [].
 	order_planned(OrderID,plan) & all_proposals_received(OrderID)
 	<- .print("[proposalReceived] ",OrderID);
 	!contract(OrderID).
-	
+
++deleteVehicle(V): true <- 
+	-deleteVehicle(V)[source(_)];
+	-vehicle(V).
+
 //cleanUP events
 +proposalOrder(OrderID,Proposer,Cost): order_planned(OrderID,finished) <- -proposalOrder(OrderID,Proposer,Cost)[source(_)].
 +refusalOrder(OrderID,Proposer): order_planned(OrderID,finished) <- -refusalOrder(OrderID,Proposer)[source(_)].
