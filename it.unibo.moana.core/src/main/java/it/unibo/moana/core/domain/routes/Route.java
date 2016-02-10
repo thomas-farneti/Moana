@@ -33,9 +33,9 @@ public class Route implements IEntity<String> {
 	}
 	
 	public double computeOrderInsertionCost(Position orderPos){
-		Iterable<Position> positions = Arrays.asList(new Position[]{ orders.get(orders.size()-1).getClient().getPosition(),orderPos});
-		
-		dt.computeDistanceTime(positions);
+//		Iterable<Position> positions = Arrays.asList(new Position[]{ orders.get(orders.size()-1).getClient().getPosition(),orderPos});
+//		
+//		dt.computeDistanceTime(positions);
 		
 		return 10;
 	}

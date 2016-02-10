@@ -22,18 +22,18 @@ public class RoutesReadModel implements IRoutesReadModel {
 
 	@Override
 	public QueryOrderInsertionCostResult query(QueryOrderInsertionCost query) {
-		Route r = rRepo.load(query.routeId);
-		
-		GetOrdersDetailsByIds q = new GetOrdersDetailsByIds();
-		q.Ids = Arrays.asList(new String[] {query.orderId});
-		
-		OrderDetails o = ordersRm.Query(q).OrdersDetails[0];
-		
-		double cost =  r.computeOrderInsertionCost(new Position(o.positionLatitude, o.positionLongitude));
-		
+//		Route r = rRepo.load(query.routeId);
+//		
+//		GetOrdersDetailsByIds q = new GetOrdersDetailsByIds();
+//		q.Ids = Arrays.asList(new String[] {query.orderId});
+//		
+//		OrderDetails o = ordersRm.Query(q).OrdersDetails[0];
+//		
+//		double cost =  r.computeOrderInsertionCost(new Position(o.positionLatitude, o.positionLongitude));
+//		
 		QueryOrderInsertionCostResult result = new QueryOrderInsertionCostResult();
-		result.cost = cost;
-		result.routeId = r.getId();
+		result.cost = 100;
+		result.routeId = "prova";
 		
 		return result;
 	}

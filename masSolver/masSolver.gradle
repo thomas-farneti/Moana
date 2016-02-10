@@ -32,11 +32,8 @@ task copyDependencies(type: Copy) {
    into 'lib'
 }
 
-'a-init' << {
-    copyDependencies
-}
-
-compileJava.dependsOn('a-compile')
+compileJava.dependsOn(copyDependencies)
+processResources.dependsOn('a-compile')
 
 //build.doLast{
 //   delete fileTree('build/libs') {
