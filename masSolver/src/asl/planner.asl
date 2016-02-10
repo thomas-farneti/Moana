@@ -18,12 +18,12 @@ all_proposals_received(OrderID)
 +!contract(OrderID): order_planned(OrderID,plan)
 	<- -order_planned(OrderID,_);
 	   +order_planned(OrderID,challenge); 
-	  .print("Check for winner of the order ", OrderID);
+	  .print("[WinnerCheck] Order->", OrderID);
 	  .findall(offer(C,P),proposalOrder(OrderID,P,C),L);
-      .print("Offers are ",L);
+      .print("[Offers] ",L);
       L \== []; 
       .min(L,offer(WAg,WOf));
-      .print("Winner is ",WOf," with ",WAg);
+      .print("[Winner] ",WOf," [Cost] ",WAg);
       !announce_result(OrderID,L,WOf);
       -+order_planned(OrderID,finished).
   	  /* TODO: Inviare a tutti chi ha vinto e cancellare le proposte */
@@ -31,22 +31,20 @@ all_proposals_received(OrderID)
 +!announce_result(_,[],_).
 // announce to the winner
 +!announce_result(OrderID,[offer(_,WAg)|T],WAg) 
-   <- .print("Send to the winner of ", OrderID);
+   <- .print("[WinnerSendMessage] Order-> ", OrderID);
    	  .send(WAg,tell,accept_proposal(OrderID));
-   	  .print("Delete the proposal of", WAg);
    	  -proposalOrder(OrderID,WAg,_)[source(WAg)];
       !announce_result(OrderID,T,WAg).
 // announce to others
 +!announce_result(OrderID,[offer(_,LAg)|T],WAg) 
-   <- .print("Send to the winner of ", OrderID);
+   <- .print("[WinnerSendMessage] Order-> ", OrderID);
    	  .send(LAg,tell,reject_proposal(OrderID));
-   	  .print("Delete the proposal of", LAg);
    	  -proposalOrder(OrderID,LAg,_)[source(LAg)];
       !announce_result(OrderID,T,WAg).
 
 /* Belief's Plans */
 
-+vehicle(Name) : true <- .print("Welcome to ", Name).
++vehicle(Name) : true <- .print("[Welcome] ", Name).
 
 +order(OrderID,Content) : .count(vehicle(_),NV) & NV >0 <- .print("Pianifico Ordine");
 	!planOrder(order(OrderID,Content));
@@ -54,12 +52,12 @@ all_proposals_received(OrderID)
 
 +proposalOrder(OrderID,Proposer,Cost): 
 	order_planned(OrderID,plan) & all_proposals_received(OrderID)
-	<- .print("All proposal received ",OrderID);
+	<- .print("[proposalReceived] ",OrderID);
 	!contract(OrderID).
 
 +refusalOrder(OrderID,Proposer): 
 	order_planned(OrderID,plan) & all_proposals_received(OrderID)
-	<- .print("All proposal received ",OrderID);
+	<- .print("[proposalReceived] ",OrderID);
 	!contract(OrderID).
 	
 /*
