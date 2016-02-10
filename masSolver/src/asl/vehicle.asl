@@ -3,9 +3,10 @@
 /* Initial beliefs and rules */
 
 canChallengeOrder(VehicleCapacity,OrderCapacity) :- VehicleCapacity >= OrderCapacity.
+full(Capacity) :- Capacity <= 10.
 
 vehicleCapacity(100).
-
+charging.
 /* Initial goals */
 
 !start.
@@ -13,34 +14,66 @@ vehicleCapacity(100).
 /* Goal's Plans */
 
 +!start : .my_name(Me) <- 
-	.print("Hello I'm ",Me);
-	.send(planner,tell,vehicle(Me));
-	.wait(2000);
-	.send(planner,tell,order(Me,100));.
+	.print("[Hello] ",Me);
+	.send(planner,tell,vehicle(Me)).
 
-+!testCurentCapacity(OrderID,Content) : vehicleCapacity(V) & canChallengeOrder(Content,V) <- .print("I Can challenge for the order").
+//+!stop(V) : charging & ~full(V).
 
-/* Belief's Plans */
++!stop(V) : charging & full(V) <-
+	.print("[DeleteFromPlanner]");
+	.my_name(Me); 
+	-charging;
+	.send(planner,tell,deleteVehicle(Me)).
+	/* qua poi devi salvare i tuoi risultati */
 
-+pendingOrder(OrderID,Content) : true <- .print("Vehicle receved pending order");
-	!testCurentCapacity(OrderID,Content);
-	.print("Send back my proposal");
+@r1 [atomic]
++!testCurentCapacity(OrderID,Content) : vehicleCapacity(V) & canChallengeOrder(V,Content) <- 
+	.print("[CanChallenge] ",V," [OrderContent] ",Content);
 	.my_name(Me);
+	-+vehicleCapacity(V-Content);
+	+pendingCapacity(OrderID);
 	/* Custom action for the computation of the Cost */
 	.random(Cost);
 	.send(planner, tell, proposalOrder(OrderID,Me,Cost)).
+	
++!testCurentCapacity(OrderID,Content) : vehicleCapacity(V) & not canChallengeOrder(V,Content) <-
+	.print("[CannotChallenge] ",V," [OrderContent] ",Content);
+	.my_name(Me);
+	/* Custom action for the computation of the Cost */
+	.send(planner, tell, refusalOrder(OrderID,Me));
+	-pendingOrder(OrderID,Content)[source(_)].
 
-+accept_proposal(OrderID) : true <- .print("I have to plan this shit ",OrderID ," and reduce my capacity").
+@r2 [atomic]
++!restoreCapacity(OrderID) : vehicleCapacity(V) & pendingOrder(OrderID,Content) <-
+    -+vehicleCapacity(V + Content);
+    -pendingOrder(OrderID,_)[source(planner)].
+
+/* Belief's Plans */
+
++pendingOrder(OrderID,Content) : charging <- !testCurentCapacity(OrderID,Content).
++pendingOrder(OrderID,Content) : not charging <- 
+   .print("i'm dead.");
+   .send(planner, tell, refusalOrder(OrderID,Me)).
+
++accept_proposal(OrderID) : vehicleCapacity(V) <- 
+    .print("[AssegnedOrder] ", OrderID);
+	-accept_proposal(OrderID)[source(_)];
+	-pendingOrder(OrderID,Content)[source(planner)];
+	+orderToServe(OrderID,Content);
+	-pendingCapacity(OrderID)[source(_)];
+	!stop(V).
 
 +reject_proposal(OrderID) : true <- 
-	.print("Planner SCREW YOU MOTHERFUCKER!!");
-	-pendingOrder(OrderID,_)[source(planner)].
+	.print("[RejectedOrder]");
+	-reject_proposal(OrderID)[source(planner)];
+	-pendingCapacity(OrderID)[source(_)];
+	!restoreCapacity(OrderID).
 	
 /*
- * Fare un refactoring percui l'invio della mia proposta la faccio solamente se ho la capacita' per gestirlo, altrimenti mando un refusal (consigliato, agire sul contesto, stesso trigger event ma contesto diverso in base se ho o meno capacita'.
+ * DONE  --------- Fare un refactoring percui l'invio della mia proposta la faccio solamente se ho la capacita' per gestirlo, altrimenti mando un refusal (consigliato, agire sul contesto, stesso trigger event ma contesto diverso in base se ho o meno capacita'.
  * Costruire la custom action per il calcolo del costo di inserimento.
  * Gestire l'accettazione e l'assegnamento dell'ordine da parte del planner: ridurre la propria capacita' e aggiungerla alla lista di ordini da soddisfare.
- * Imbastire il piano che, quando la mia capacita' scende sotto una certa soglia, dice al planner di cavarlo e va a scrivere il suo risultato di pianificazione attraverso un'azione sull'environment.
+ * HALF DONE ----- Imbastire il piano che, quando la mia capacita' scende sotto una certa soglia, dice al planner di cavarlo e va a scrivere il suo risultato di pianificazione attraverso un'azione sull'environment.
  * 
  * STARE ATTENTI, FARE L'AGGIORNAMENTO DELLA CAPACITA' DEL VEICOLO IN MANIERA ATOMICA IN MODO DA EVITARE CHE IL CONTROLLO DELLA CAPACITA' AD UN NUOVO CICLO DEL PROTOCOLLO DI ASSEGNAMENTO AVVENGA PRIMA DI UNA SOTTRAZIONE DI VALORE DI CAPACITA'.
  * L'IMPORTANTE E' CHE QUESTO NON AVVENGA SE NO SON CRISTI.
