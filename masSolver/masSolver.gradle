@@ -32,5 +32,5 @@ task copyDependencies(type: Copy) {
    into 'lib'
 }
 
-build.dependsOn(copyDependencies)
+compileJava.dependsOn(copyDependencies)
 build.dependsOn('a-compile')

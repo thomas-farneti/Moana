@@ -9,23 +9,20 @@
 -->
 
 <project name   ="masSolver"
-         basedir=".."
+         basedir=""
          default="run">
 
     <property name="mas2j.project.file" value="masSolver.mas2j"/>
     <property name="debug" value=""/> <!-- use "-debug" to run in debug mode -->
     <property name="build.dir" value="${basedir}/bin/classes" />
 
-    <property name="jasonJar" value="C:\Jason-1.4.2\lib\jason.jar"/>
+    <property name="jasonJar" value="lib/jason-1.4.1.jar"/>
 
     <path id="project.classpath">
         <pathelement location="${basedir}"/>
         <pathelement location="${build.dir}"/>
         <pathelement location="${jasonJar}"/>
         <fileset dir="${basedir}/lib" >  <include name="*.jar" /> </fileset>
-        <pathelement location="../it.unibo.moana.core/build/classes/main"/>
-        <pathelement location="../it.unibo.moana.messages/build/classes/main"/>
-        <pathelement location="../it.unibo.moana.persistence/build/classes/main"/>
 
     </path>
 
