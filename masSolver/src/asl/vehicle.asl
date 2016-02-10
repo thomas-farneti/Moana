@@ -29,18 +29,24 @@ vehicleCapacity(99).
 	.print("[CannotChallenge] ",V," [OrderContent] ",Content);
 	.my_name(Me);
 	/* Custom action for the computation of the Cost */
-	.send(planner, tell, refusalOrder(OrderID,Me)).
+	.send(planner, tell, refusalOrder(OrderID,Me));
+	-pendingOrder(OrderID,Content)[source(_)].
 	
 
 /* Belief's Plans */
 
 +pendingOrder(OrderID,Content) : true <- !testCurentCapacity(OrderID,Content).
 
-+accept_proposal(OrderID) : true <- .print("[AssegnedOrder] ", OrderID).
-
++accept_proposal(OrderID) : true <- 
+    .print("[AssegnedOrder] ", OrderID);
+	-accept_proposal(OrderID)[source(_)];
+	-pendingOrder(OrderID,Content)[source(planner)];
+	+orderToServe(OrderID,Content).
+	
 +reject_proposal(OrderID) : true <- 
 	.print("[RejectedOrder]");
-	-pendingOrder(OrderID,_)[source(planner)].
+	-pendingOrder(OrderID,_)[source(planner)];
+	-reject_proposal(OrderID)[source(planner)].
 	
 /*
  * DONE Fare un refactoring percui l'invio della mia proposta la faccio solamente se ho la capacita' per gestirlo, altrimenti mando un refusal (consigliato, agire sul contesto, stesso trigger event ma contesto diverso in base se ho o meno capacita'.
