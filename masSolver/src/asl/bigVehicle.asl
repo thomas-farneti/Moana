@@ -4,7 +4,7 @@
 
 canChallengeOrder(VehicleCapacity,OrderCapacity) :- VehicleCapacity >= OrderCapacity.
 
-vehicleCapacity(99).
+vehicleCapacity(199).
 
 /* Initial goals */
 
@@ -14,9 +14,7 @@ vehicleCapacity(99).
 
 +!start : .my_name(Me) <- 
 	.print("[Hello] ",Me);
-	.send(planner,tell,vehicle(Me));
-	.wait(2000);
-	.send(planner,tell,order(Me,100)).
+	.send(planner,tell,vehicle(Me));.
 
 +!testCurentCapacity(OrderID,Content) : vehicleCapacity(V) & canChallengeOrder(V,Content) <- 
 	.print("[CanChallenge] ",V," [OrderContent] ",Content);

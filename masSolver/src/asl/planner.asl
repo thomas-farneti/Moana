@@ -4,12 +4,14 @@
 all_proposals_received(OrderID)
   :- .count(vehicle(_),NV) 					&			// number of participants
      .count(proposalOrder(OrderID,_,_), NO) &           // number of proposes received
-     .count(refuse(_), NR) 					&			// number of refusals received
+     .count(refusalOrder(OrderID,_), NR) 					&			// number of refusals received
      NV = NO + NR.
+
+listIsEmpty(L) :- L \== [].
 
 /* Goal's Plans */
 // When an order arrive is planned
-+!planOrder(order(OrderID,Content)) : true <- .print("Parte CNP");
++!planOrder(order(OrderID,Content)) : true <- .print("[Start CNP]");
 	+order_planned(OrderID,plan);
 	.findall(V,vehicle(V),VS);
 	.send(VS,tell,pendingOrder(OrderID,Content)).
@@ -19,10 +21,11 @@ all_proposals_received(OrderID)
 +!contract(OrderID): order_planned(OrderID,plan)
 	<- -order_planned(OrderID,_);
 	   +order_planned(OrderID,challenge); 
-	  .print("[WinnerCheck] Order->", OrderID);
+	  .print("[WinnerCheckStart] Order->", OrderID);
 	  .findall(offer(C,P),proposalOrder(OrderID,P,C),L);
       .print("[Offers] ",L);
       !winnerCheck(L,OrderID).
+      
 // previous plan sub-plan.
 @r2 [atomic]
 +!winnerCheck(L,OrderID) : L \== [] <- 
@@ -33,7 +36,8 @@ all_proposals_received(OrderID)
 
 // previous plan sub-plan.
 @r3 [atomic]
-+!winnerCheck(L,OrderID) : L == [] <- .print("Farne Frocio").
++!winnerCheck(L,OrderID) : L == [] <- 
+    .print("[NoProposals] New Agent!").
   	
 +!announce_result(_,[],_).
 // announce to the winner
@@ -55,7 +59,7 @@ all_proposals_received(OrderID)
 +vehicle(Name) : true <- .print("[Welcome] ", Name).
 
 // New order arrive and is planned directly if vehicles exists
-+order(OrderID,Content) : .count(vehicle(_),NV) & NV >0 <- .print("Pianifico Ordine");
++order(OrderID,Content) : .count(vehicle(_),NV) & NV >0 <- .print("[OrderArrived]");
 	!planOrder(order(OrderID,Content));
 	-order(OrderID,Content)[source(_)].
 
