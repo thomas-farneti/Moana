@@ -1,4 +1,4 @@
-package it.unibo.moana.core.domain.Orders;
+package it.unibo.moana.core.domain.orders;
 
 import java.util.ArrayList;
 import java.util.List;

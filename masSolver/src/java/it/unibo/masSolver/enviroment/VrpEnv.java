@@ -1,3 +1,4 @@
+package it.unibo.masSolver.enviroment;
 // Environment code for project masSolver
 
 import java.util.UUID;

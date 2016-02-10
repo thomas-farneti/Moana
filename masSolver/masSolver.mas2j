@@ -2,7 +2,7 @@ MAS masSolver {
 
 	infrastructure: Centralised
 
-	environment: VrpEnv
+	environment: it.unibo.masSolver.enviroment.VrpEnv
 
 	agents:
 		testAgent;

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import it.unibo.moana.core.domain.Entity;
+import it.unibo.moana.core.domain.IEntity;
 import it.unibo.moana.core.infrastructure.persistence.IRepository;
 
-public class FakeRepository <K,E extends Entity<K>> implements IRepository<K,E> {
+public class FakeRepository <K,E extends IEntity<K>> implements IRepository<K,E> {
 
 	protected HashMap<K,E> records;
 	

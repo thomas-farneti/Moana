@@ -22,8 +22,8 @@ eclipse {
 dependencies {
 	compile 'com.google.guava:guava:19.0'
 	compile 'net.sf.jason:jason:1.4.1'
-	compile project(':it.unibo.moana.messages')
 	compile project(':it.unibo.moana.core')
+	compile project(':it.unibo.moana.messages')
 	compile project(':it.unibo.moana.persistence')
 }
 
@@ -32,5 +32,15 @@ task copyDependencies(type: Copy) {
    into 'lib'
 }
 
-compileJava.dependsOn(copyDependencies)
-build.dependsOn('a-compile')
+'a-init' << {
+    copyDependencies
+}
+
+compileJava.dependsOn('a-compile')
+
+//build.doLast{
+//   delete fileTree('build/libs') {
+//        include '**/*.jar'
+//    }
+//  'a-jar'
+//}

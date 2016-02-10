@@ -14,13 +14,15 @@
 
     <property name="mas2j.project.file" value="masSolver.mas2j"/>
     <property name="debug" value=""/> <!-- use "-debug" to run in debug mode -->
-    <property name="build.dir" value="${basedir}/bin/classes" />
-
+	<property name="build.dir" value="${basedir}/build"/>
+    <property name="classes.dir" value="${build.dir}" />
+	<property name="jar.dir" value="${basedir}/libs" />
+	
     <property name="jasonJar" value="lib/jason-1.4.1.jar"/>
 
     <path id="project.classpath">
         <pathelement location="${basedir}"/>
-        <pathelement location="${build.dir}"/>
+        <pathelement location="${classes.dir}"/>
         <pathelement location="${jasonJar}"/>
         <fileset dir="${basedir}/lib" >  <include name="*.jar" /> </fileset>
 
@@ -33,7 +35,7 @@
     </target>
 
     <target name="init">
-        <mkdir dir="${build.dir}" />
+        <mkdir dir="${classes.dir}" />
         <antcall target="user-init" />
     </target>
 
@@ -41,22 +43,25 @@
         <condition property="srcdir" value="${basedir}/src/java" else="${basedir}" >
             <available file="${basedir}/src/java" />
         </condition>
-        <javac srcdir="${srcdir}" destdir="${build.dir}" debug="true" optimize="true" includeantruntime="false" >
+        <javac srcdir="${srcdir}" destdir="${classes.dir}" debug="true" optimize="true" includeantruntime="false" >
             <classpath refid="project.classpath"/>
         </javac>
     </target>
     
     <target name="jar" depends="compile">
-        <delete file="${ant.project.name}.jar" />
-        <copy file="${jasonJar}" tofile="${ant.project.name}.jar" />
+        <!--<delete file="${ant.project.name}.jar" />-->
+        <copy file="${jasonJar}" tofile="${jar.dir}/${ant.project.name}.jar" />
         <copy file="${mas2j.project.file}" tofile="default.mas2j" />
-        <jar update="yes" jarfile="${ant.project.name}.jar" >
+        <jar update="yes" jarfile="${jar.dir}/${ant.project.name}.jar" >
             <fileset dir="${basedir}">
                 <include name="**/*.asl" />
                 <include name="**/*.mas2j" />
             </fileset>
-            <fileset dir="${build.dir}">
+            <fileset dir="${classes.dir}">
                 <include name="**/*.class" />
+            </fileset>
+            <fileset dir="${basedir}">
+                <include name="lib/*.jar" />
             </fileset>
             <manifest>
                   <attribute name="Main-Class" value="jason.infra.centralised.RunCentralisedMAS"/>
@@ -104,7 +109,4 @@
             <fileset dir="${basedir}" includes="**/*.class"/>
         </delete>
     </target>
-
-
-
 </project>

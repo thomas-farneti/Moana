@@ -1,4 +1,4 @@
-package it.unibo.moana.core.domain.Orders;
+package it.unibo.moana.core.domain.orders;
 
 import it.unibo.moana.core.domain.valueObjects.Position;
 
@@ -11,5 +11,9 @@ public class Client {
 		this.id = id;
 		this.description = description;
 		this.position = position;
+	}
+	
+	public Position getPosition(){
+		return this.position;
 	}
 }

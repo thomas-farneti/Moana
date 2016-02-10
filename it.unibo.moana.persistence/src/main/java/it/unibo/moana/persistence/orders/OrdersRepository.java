@@ -2,8 +2,8 @@ package it.unibo.moana.persistence.orders;
 
 import java.util.Collection;
 
-import it.unibo.moana.core.domain.Orders.IOrdersRepository;
-import it.unibo.moana.core.domain.Orders.Order;
+import it.unibo.moana.core.domain.orders.IOrdersRepository;
+import it.unibo.moana.core.domain.orders.Order;
 import it.unibo.moana.core.infrastructure.persistence.IRepository;
 
 public class OrdersRepository implements IOrdersRepository {

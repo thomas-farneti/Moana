@@ -1,4 +1,4 @@
-package it.unibo.moana.core.domain.Orders;
+package it.unibo.moana.core.domain.orders;
 
 import it.unibo.moana.messages.orders.query.GetOrdersDetailsByIds;
 import it.unibo.moana.messages.orders.query.GetOrdersDetailsByIdsResult;

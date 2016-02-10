@@ -8,9 +8,9 @@ import org.junit.Test;
 
 import com.google.common.eventbus.Subscribe;
 
-import it.unibo.moana.core.domain.Orders.IOrdersRepository;
-import it.unibo.moana.core.domain.Orders.Order;
-import it.unibo.moana.core.domain.Orders.OrdersService;
+import it.unibo.moana.core.domain.orders.IOrdersRepository;
+import it.unibo.moana.core.domain.orders.Order;
+import it.unibo.moana.core.domain.orders.OrdersService;
 import it.unibo.moana.core.infrastructure.domainEvents.GuavaEventBus;
 import it.unibo.moana.core.infrastructure.domainEvents.IBus;
 import it.unibo.moana.core.infrastructure.domainEvents.IHandler;

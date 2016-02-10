@@ -2,9 +2,9 @@ package it.unibo.moana.core.infrastructure.persistence;
 
 import java.util.Collection;
 
-import it.unibo.moana.core.domain.Entity;
+import it.unibo.moana.core.domain.IEntity;
 
-public interface IRepository <K,E extends Entity<K>>{
+public interface IRepository <K,E extends IEntity<K>>{
 
 	 void remove(E entity);
 	 void addOrUpdate(E entity); 
