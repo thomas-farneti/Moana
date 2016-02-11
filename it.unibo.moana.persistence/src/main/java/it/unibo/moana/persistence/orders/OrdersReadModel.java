@@ -1,7 +1,11 @@
-package it.unibo.moana.core.domain.orders;
+package it.unibo.moana.persistence.orders;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import it.unibo.moana.core.domain.orders.IOrdersReadModel;
+import it.unibo.moana.core.domain.orders.IOrdersRepository;
+import it.unibo.moana.core.domain.orders.Order;
 import it.unibo.moana.messages.orders.query.GetOrdersDetailsByIds;
 import it.unibo.moana.messages.orders.query.GetOrdersDetailsByIdsResult;
 

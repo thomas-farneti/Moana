@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import it.unibo.moana.core.domain.routes.IRoutesRepository;
 import it.unibo.moana.core.domain.routes.Route;
-import it.unibo.moana.core.infrastructure.persistence.IRepository;
+import it.unibo.moana.persistence.IRepository;
 
 public class RoutesRepository implements IRoutesRepository {
 
@@ -31,7 +31,7 @@ public class RoutesRepository implements IRoutesRepository {
 
 	@Override
 	public Route load(String id) {
-		return this.load(id);
+		return this.repo.load(id);
 	}
 
 }

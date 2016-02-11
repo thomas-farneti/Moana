@@ -1,6 +1,6 @@
 package it.unibo.moana.test.infrastructure;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.UUID;
 
@@ -11,9 +11,9 @@ import com.google.common.eventbus.Subscribe;
 import it.unibo.moana.core.domain.orders.IOrdersRepository;
 import it.unibo.moana.core.domain.orders.Order;
 import it.unibo.moana.core.domain.orders.OrdersService;
-import it.unibo.moana.core.infrastructure.domainEvents.GuavaEventBus;
-import it.unibo.moana.core.infrastructure.domainEvents.IBus;
-import it.unibo.moana.core.infrastructure.domainEvents.IHandler;
+import it.unibo.moana.core.domainEvents.IHandler;
+import it.unibo.moana.infrastructure.bus.GuavaEventBus;
+import it.unibo.moana.infrastructure.bus.IBus;
 import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
 import it.unibo.moana.messages.orders.events.OrderUpdatedEvent;
 import it.unibo.moana.persistence.FakeRepository;
@@ -38,7 +38,7 @@ public class EventBus_Should implements IHandler {
 		
 		bus.Send(cmd);
 		
-		Thread.sleep(2000);
+		Thread.sleep(500);
 		
 		assertTrue(id == this.orderIdEvent);
 	}

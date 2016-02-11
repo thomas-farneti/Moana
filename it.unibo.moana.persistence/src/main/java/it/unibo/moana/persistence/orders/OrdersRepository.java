@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import it.unibo.moana.core.domain.orders.IOrdersRepository;
 import it.unibo.moana.core.domain.orders.Order;
-import it.unibo.moana.core.infrastructure.persistence.IRepository;
+import it.unibo.moana.persistence.IRepository;
 
 public class OrdersRepository implements IOrdersRepository {
 

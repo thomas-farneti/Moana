@@ -1,18 +1,20 @@
-package it.unibo.masSolver.infrastructure;
+package it.unibo.moana.infrastructure;
 
+import it.unibo.moana.core.domain.orders.Client;
 import it.unibo.moana.core.domain.orders.IOrdersReadModel;
 import it.unibo.moana.core.domain.orders.IOrdersRepository;
 import it.unibo.moana.core.domain.orders.Order;
-import it.unibo.moana.core.domain.orders.OrdersReadModel;
 import it.unibo.moana.core.domain.orders.OrdersService;
 import it.unibo.moana.core.domain.routes.IRoutesReadModel;
 import it.unibo.moana.core.domain.routes.IRoutesRepository;
 import it.unibo.moana.core.domain.routes.Route;
-import it.unibo.moana.core.domain.routes.RoutesReadModel;
-import it.unibo.moana.core.infrastructure.domainEvents.GuavaEventBus;
-import it.unibo.moana.core.infrastructure.domainEvents.IBus;
+import it.unibo.moana.core.domain.valueObjects.Position;
+import it.unibo.moana.infrastructure.bus.GuavaEventBus;
+import it.unibo.moana.infrastructure.bus.IBus;
 import it.unibo.moana.persistence.FakeRepository;
+import it.unibo.moana.persistence.orders.OrdersReadModel;
 import it.unibo.moana.persistence.orders.OrdersRepository;
+import it.unibo.moana.persistence.routes.RoutesReadModel;
 import it.unibo.moana.persistence.routes.RoutesRepository;
 
 public class Configurator {
@@ -33,7 +35,7 @@ public class Configurator {
 		ordersReadModel = new OrdersReadModel(ordersRepo);
 		
 		routesRepo = new RoutesRepository(new FakeRepository<String,Route>());
-		routesReadModel = new RoutesReadModel(routesRepo, ordersReadModel);
+		routesReadModel = new RoutesReadModel(routesRepo, ordersRepo);
 		
 		eventBus.registerHandler(new OrdersService(ordersRepo, eventBus));
 	}
@@ -41,9 +43,20 @@ public class Configurator {
 	public static Configurator GetInstance(){
 		if(config == null){
 			config = new Configurator();
+			addFakeValues();
+			
 		}
 		
 		return config;
+	}
+	
+	private static void addFakeValues(){
+		Order o = new Order("testOrder", "TestOrder",0, new Client("testClient", "testClient", Position.empty()));
+		config.ordersRepo.addOrUpdate(o);
+		
+		Route r = new Route("testRoute");
+		r.addOrderSequential(o);
+		config.routesRepo.addOrUpdate(r);
 	}
 	
 	public IBus getBus(){

@@ -10,8 +10,9 @@
 
 +!start : true <- 
 	.print("hello world.");
-	 it.unibo.masSolver.internaActions.computeInsertionCost("a00","bb",C);
-	 .print(C);
+	it.unibo.masSolver.internaActions.computeInsertionCost("testRoute","testOrder",C);
+	.print(C);
+	 
 	 .my_name(Me);
 	 .concat(Me,1,Order1);
 	.send(planner,tell,order(Order1,50));

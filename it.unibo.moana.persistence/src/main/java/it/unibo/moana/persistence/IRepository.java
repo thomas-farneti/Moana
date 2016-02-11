@@ -1,4 +1,4 @@
-package it.unibo.moana.core.infrastructure.persistence;
+package it.unibo.moana.persistence;
 
 import java.util.Collection;
 

@@ -1,14 +1,13 @@
-package it.unibo.masSolver.enviroment;
+package it.unibo.masSolver.env;
 // Environment code for project masSolver
 
 import java.util.UUID;
-import java.util.logging.Logger;
 
 import com.google.common.eventbus.Subscribe;
 
-import it.unibo.masSolver.infrastructure.Configurator;
-import it.unibo.moana.core.infrastructure.domainEvents.IBus;
-import it.unibo.moana.core.infrastructure.domainEvents.IHandler;
+import it.unibo.moana.core.domainEvents.IHandler;
+import it.unibo.moana.infrastructure.Configurator;
+import it.unibo.moana.infrastructure.bus.IBus;
 import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
 import it.unibo.moana.messages.orders.events.OrderUpdatedEvent;
 import jason.asSyntax.Literal;

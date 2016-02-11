@@ -1,7 +1,7 @@
 package it.unibo.moana.core.domain.routes;
 
-import it.unibo.moana.core.infrastructure.domainEvents.IEventPublisher;
-import it.unibo.moana.core.infrastructure.domainEvents.IHandler;
+import it.unibo.moana.core.domainEvents.IEventPublisher;
+import it.unibo.moana.core.domainEvents.IHandler;
 
 public class RoutesService implements IHandler {
 

@@ -9,14 +9,14 @@ import org.junit.Test;
 import it.unibo.moana.core.domain.orders.IOrdersReadModel;
 import it.unibo.moana.core.domain.orders.IOrdersRepository;
 import it.unibo.moana.core.domain.orders.Order;
-import it.unibo.moana.core.domain.orders.OrdersReadModel;
 import it.unibo.moana.core.domain.orders.OrdersService;
-import it.unibo.moana.core.infrastructure.domainEvents.GuavaEventBus;
-import it.unibo.moana.core.infrastructure.domainEvents.IBus;
+import it.unibo.moana.infrastructure.bus.GuavaEventBus;
+import it.unibo.moana.infrastructure.bus.IBus;
 import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
 import it.unibo.moana.messages.orders.query.GetOrdersDetailsByIds;
 import it.unibo.moana.messages.orders.query.GetOrdersDetailsByIdsResult;
 import it.unibo.moana.persistence.FakeRepository;
+import it.unibo.moana.persistence.orders.OrdersReadModel;
 import it.unibo.moana.persistence.orders.OrdersRepository;
 
 public class OrdersService_Should {

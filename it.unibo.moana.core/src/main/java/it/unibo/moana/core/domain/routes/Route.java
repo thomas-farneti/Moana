@@ -1,7 +1,7 @@
 package it.unibo.moana.core.domain.routes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Random;
 
 import it.unibo.moana.core.domain.IEntity;
 import it.unibo.moana.core.domain.domainServices.IDistanceTimeService;
@@ -13,13 +13,10 @@ public class Route implements IEntity<String> {
 	protected String id;
 	protected ArrayList<Order> orders;
 	protected double currentLoad;
-	
-	protected IDistanceTimeService dt;
-	
-	public Route(String id, IDistanceTimeService dtService) {
+		
+	public Route(String id) {
 		this.id = id;
 		this.orders = new ArrayList<>();
-		this.dt = dtService;
 	}
 
 	@Override
@@ -32,12 +29,12 @@ public class Route implements IEntity<String> {
 		this.currentLoad+=o.getOrderDemand();
 	}
 	
-	public double computeOrderInsertionCost(Position orderPos){
+	public double computeOrderInsertionCost(Position orderPos, IDistanceTimeService dt){
 //		Iterable<Position> positions = Arrays.asList(new Position[]{ orders.get(orders.size()-1).getClient().getPosition(),orderPos});
 //		
 //		dt.computeDistanceTime(positions);
 		
-		return 10;
+		return new Random().nextInt(999)+1;
 	}
 
 }

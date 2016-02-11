@@ -16,4 +16,8 @@ public class Position {
 	public Double getLongitude() {
 		return longitude;
 	}
+	
+	public static Position empty(){
+		return new Position(0, 0);
+	}
 }

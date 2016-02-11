@@ -6,13 +6,14 @@ public class Order implements IEntity<String>{
 	
 	protected String id;
 	protected String description;
-	protected Double demand;
+	protected double demand;
 	protected Client client;
 	
-	public Order(String id, String description, Client client){
+	public Order(String id, String description, double demand, Client client){
 		this.id=id;
 		this.description = description;
 		this.client = client;
+		this.demand= demand;
 	}
 	
 	public String getClientDescription()

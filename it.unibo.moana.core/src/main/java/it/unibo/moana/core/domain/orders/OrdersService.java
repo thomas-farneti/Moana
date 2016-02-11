@@ -2,8 +2,8 @@ package it.unibo.moana.core.domain.orders;
 
 import com.google.common.eventbus.Subscribe;
 
-import it.unibo.moana.core.infrastructure.domainEvents.IEventPublisher;
-import it.unibo.moana.core.infrastructure.domainEvents.IHandler;
+import it.unibo.moana.core.domainEvents.IEventPublisher;
+import it.unibo.moana.core.domainEvents.IHandler;
 import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
 import it.unibo.moana.messages.orders.events.OrderUpdatedEvent;
 
@@ -23,7 +23,7 @@ public class OrdersService implements IHandler{
 		
 		if(o == null)
 		{
-			o = new Order(cmd.id, cmd.description, null);
+			o = new Order(cmd.id, cmd.description,cmd.demand,null);
 			repo.addOrUpdate(o);
 		}
 		
