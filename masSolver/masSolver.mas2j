@@ -5,9 +5,9 @@ MAS masSolver {
 	environment: it.unibo.masSolver.enviroment.VrpEnv
 
 	agents:
-		testAgent;
+		testAgent #3;
 		planner;
-		vehicle;
+		vehicle #2;
 
 	aslSourcePath:
 		"src/asl";

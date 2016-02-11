@@ -20,6 +20,7 @@ all_proposals_received(OrderID)
 	.send(VS,tell,pendingOrder(OrderID,Content)).
 
 +!sendProposal(Challengers,VS,OrderID,Content) : Challengers == 0 <-
+	-+order_planned(OrderID,finished);
     .create_agent(B, "/vehicle.asl");
     .send(B,tell,pendingOrder(OrderID,Content));
     .send(B,tell,accept_proposal(OrderID)).
@@ -28,7 +29,7 @@ all_proposals_received(OrderID)
 // The assignment for the order start.
 @r1 [atomic]
 +!contract(OrderID): order_planned(OrderID,plan)
-	<- -order_planned(OrderID,_);
+	<- -order_planned(OrderID,plan);
 	   +order_planned(OrderID,challenge); 
 	  .print("[WinnerCheckStart] Order->", OrderID);
 	  .findall(offer(C,P),proposalOrder(OrderID,P,C),L);
@@ -39,10 +40,10 @@ all_proposals_received(OrderID)
 @r2 [atomic]
 +!winnerCheck(L,OrderID) : L \== [] <- 
       .min(L,offer(WAg,WOf));
-      .print("[Winner] ",WOf," [Cost] ",WAg);
-      !announce_result(OrderID,L,WOf);
       -+order_planned(OrderID,finished);
       -proposalSended(OrderID,_);
+      .print("[Winner] ",WOf," [Cost] ",WAg);
+      !announce_result(OrderID,L,WOf);
       !deleteAllRefusal(OrderID).
 
 // previous plan sub-plan.
@@ -106,7 +107,6 @@ all_proposals_received(OrderID)
 +order(OrderID,Content) : order_planned(OrderID,finished) <- -order(OrderID,_)[source(_)].
 /*
  * Sistemare il fatto di andare a prendere gli ordini dall'environment e non da messaggi dei veicoli come al momento.
- * Controllare che poi tutto funzioni, soprattutto le cose dipendenti da [source()].
- * Aggiungere il piano per la cancellazione di un veicolo quando questo e' pieno e lo comunica.
- * Aggiungere il fatto che, se nessuno risponde con un'offerta viene creato un nuovo veicolo.
+ * DONE Aggiungere il piano per la cancellazione di un veicolo quando questo e' pieno e lo comunica.
+ * DONE Aggiungere il fatto che, se nessuno risponde con un'offerta viene creato un nuovo veicolo.
  */

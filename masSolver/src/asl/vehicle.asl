@@ -19,7 +19,7 @@ charging.
 
 //+!stop(V) : charging & ~full(V).
 
-+!stop(V) : charging & full(V) <-
++!stop(V) : charging & full(V) & not pendingCapacity(_) & not pendingOrder(_,_) <-
 	.print("[DeleteFromPlanner]");
 	.my_name(Me); 
 	-charging;
@@ -45,14 +45,15 @@ charging.
 
 @r2 [atomic]
 +!restoreCapacity(OrderID) : vehicleCapacity(V) & pendingOrder(OrderID,Content) <-
-    -+vehicleCapacity(V + Content);
-    -pendingOrder(OrderID,_)[source(planner)].
+    -+vehicleCapacity(V + Content).
 
 /* Belief's Plans */
 
 +pendingOrder(OrderID,Content) : charging <- !testCurentCapacity(OrderID,Content).
 +pendingOrder(OrderID,Content) : not charging <- 
    .print("i'm dead.");
+   -pendingOrder(OrderID,Content)[source(_)];
+   .my_name(Me);
    .send(planner, tell, refusalOrder(OrderID,Me)).
 
 +accept_proposal(OrderID) : vehicleCapacity(V) <- 
@@ -67,12 +68,14 @@ charging.
 	.print("[RejectedOrder]");
 	-reject_proposal(OrderID)[source(planner)];
 	-pendingCapacity(OrderID)[source(_)];
+	-pendingOrder(OrderID,_)[source(planner)];
 	!restoreCapacity(OrderID).
 	
 /*
  * DONE  --------- Fare un refactoring percui l'invio della mia proposta la faccio solamente se ho la capacita' per gestirlo, altrimenti mando un refusal (consigliato, agire sul contesto, stesso trigger event ma contesto diverso in base se ho o meno capacita'.
  * Costruire la custom action per il calcolo del costo di inserimento.
- * Gestire l'accettazione e l'assegnamento dell'ordine da parte del planner: ridurre la propria capacita' e aggiungerla alla lista di ordini da soddisfare.
+ * DONE Gestire l'accettazione e l'assegnamento dell'ordine da parte del planner: ridurre la propria capacita' e aggiungerla alla lista di ordini da soddisfare.
+ * Fare un piano che, se mi ritrovo pieno, senza charging, ma con pending o capacity allora lui: cava i pending, ripristina la capacita', riaggiunge il charging e si ripresenta al planner(se non e' pieno lo stesso).
  * HALF DONE ----- Imbastire il piano che, quando la mia capacita' scende sotto una certa soglia, dice al planner di cavarlo e va a scrivere il suo risultato di pianificazione attraverso un'azione sull'environment.
  * 
  * STARE ATTENTI, FARE L'AGGIORNAMENTO DELLA CAPACITA' DEL VEICOLO IN MANIERA ATOMICA IN MODO DA EVITARE CHE IL CONTROLLO DELLA CAPACITA' AD UN NUOVO CICLO DEL PROTOCOLLO DI ASSEGNAMENTO AVVENGA PRIMA DI UNA SOTTRAZIONE DI VALORE DI CAPACITA'.
