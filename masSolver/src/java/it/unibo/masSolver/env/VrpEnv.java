@@ -43,16 +43,15 @@ public class VrpEnv extends Environment implements IHandler {
 	public boolean executeAction(String ag, Structure action) {
 		IBus bus = config.getBus();
 		boolean result = false;
-		
+
 		if (action.equals(Literal.parseLiteral("addOrder"))) {
 
 			System.out.println("[" + ag + "] doing: " + action);
-			
-			String id = UUID.randomUUID().toString();
-			Random r = new Random();
 
-			UpdateOrderCommand cmd = new UpdateOrderCommand(id, id, (r.nextDouble() * 59) + 1, "testClient",
-					(r.nextDouble() * 999) + 1, (r.nextDouble() * 999) + 1);
+			String id = UUID.randomUUID().toString();
+
+			UpdateOrderCommand cmd = new UpdateOrderCommand(id, id, "testClient", (new Random().nextDouble() * 49) + 1,
+					"Volume", "m3", (new Random().nextDouble() * 999) + 1, (new Random().nextDouble() * 999) + 1);
 			try {
 				bus.Send(cmd);
 				result = true;

@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import it.unibo.moana.core.domain.orders.Order;
+import it.unibo.moana.core.domain.valueObjects.Dimension;
 import it.unibo.moana.persistence.FakeRepository;
 import it.unibo.moana.persistence.IRepository;
 
@@ -14,7 +15,7 @@ public class Repository_Should {
 	public void test() {
 		IRepository<String, Order> repo = new FakeRepository<>();
 		
-		repo.addOrUpdate(new Order("test", "test", 10, null));
+		repo.addOrUpdate(new Order("test", "test", new Dimension("Volume", 0, "m3"), null));
 		
 		Order o = repo.load("test");
 		

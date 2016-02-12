@@ -2,15 +2,16 @@ package it.unibo.moana.core.domain.orders;
 
 import it.unibo.moana.core.domain.IEntity;
 import it.unibo.moana.core.domain.loadingUnloadingPoints.LoadingUnloadingPoint;
+import it.unibo.moana.core.domain.valueObjects.Dimension;
 
 public class Order implements IEntity<String>{
 	
 	protected String id;
 	protected String description;
-	protected double demand;
+	protected Dimension demand;
 	protected LoadingUnloadingPoint destination;
 	
-	public Order(String id, String description, double demand, LoadingUnloadingPoint client){
+	public Order(String id, String description, Dimension demand, LoadingUnloadingPoint client){
 		this.id=id;
 		this.description = description;
 		this.destination = client;
@@ -36,7 +37,7 @@ public class Order implements IEntity<String>{
 		return this.id;
 	}
 	
-	public double getOrderDemand(){
+	public Dimension getOrderDemand(){
 		return this.demand;
 	}
 }

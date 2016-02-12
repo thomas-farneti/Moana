@@ -29,7 +29,7 @@ public class OrdersReadModel implements IOrdersReadModel {
 			details.add(detail);
 		}
 		
-		res.OrdersDetails=details.toArray(new GetOrdersDetailsByIdsResult.OrderDetails[0]);
+		res.OrdersDetails=details;
 		
 		return res;
 	}
