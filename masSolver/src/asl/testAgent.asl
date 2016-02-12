@@ -2,7 +2,7 @@
 
 /* Initial beliefs and rules */
 
-finish(V) :- V >= 2.
+finish(V) :- V >= 1.
 
 /* Initial goals */
 
@@ -11,9 +11,10 @@ finish(V) :- V >= 2.
 /* Plans */
 
 +!start(A) : not finish(A) <- 
-	.print("hello world.");
-	it.unibo.masSolver.internalActions.computeInsertionCost("testRoute","testOrder",C);
-	.print(C);
+	.print("test agent Start");
+	.wait(1000);
+	//it.unibo.masSolver.internalActions.computeInsertionCost("testRoute","testOrder",C);
+	//.print(C);
 	
 	.print("Start Sending orders");
 	.wait(100);
