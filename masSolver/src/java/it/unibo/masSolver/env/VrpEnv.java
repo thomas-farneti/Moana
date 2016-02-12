@@ -1,6 +1,7 @@
 package it.unibo.masSolver.env;
 // Environment code for project masSolver
 
+import java.util.Random;
 import java.util.UUID;
 
 import com.google.common.eventbus.Subscribe;
@@ -16,49 +17,61 @@ import jason.environment.Environment;
 
 public class VrpEnv extends Environment implements IHandler {
 
-    //private Logger logger = Logger.getLogger("masSolver."+VrpEnv.class.getName());
-    
-    protected Configurator config;
-    
-    /** Called before the MAS execution with the args informed in .mas2j */
-    @Override
-    public void init(String[] args) {
-        super.init(args);
-        
-        config = Configurator.GetInstance();
-        
-        config.getBus().registerHandler(this);
-        clearAllPercepts();
-    }
+	// private Logger logger =
+	// Logger.getLogger("masSolver."+VrpEnv.class.getName());
 
-    @Subscribe
-    public void handle(OrderUpdatedEvent event){
-    	this.addPercept("testAgent", Literal.parseLiteral("order(\""+event.getId()+"\")"));
-    }
-    
-    @Override
-    public boolean executeAction(String ag, Structure action) {
-    	 System.out.println("[" + ag + "] doing: " + action);
-         boolean result = false;
-         if (action.equals(Literal.parseLiteral("test"))) {
-             IBus bus = config.getBus();
-             String id = UUID.randomUUID().toString();
-     		
-     		UpdateOrderCommand cmd = new UpdateOrderCommand(id, "test", 100.0, UUID.randomUUID().toString(), 10.0, 10.0);
-     		
-     		try {
+	protected Configurator config;
+
+	/** Called before the MAS execution with the args informed in .mas2j */
+	@Override
+	public void init(String[] args) {
+		super.init(args);
+
+		config = Configurator.GetInstance();
+
+		config.getBus().registerHandler(this);
+		clearAllPercepts();
+	}
+
+	@Subscribe
+	public void handle(OrderUpdatedEvent event) {
+		clearAllPercepts();
+		this.addPercept(Literal.parseLiteral("order(\"" + event.orderId + "\"," + event.demand + ")"));
+	}
+
+	@Override
+	public boolean executeAction(String ag, Structure action) {
+		IBus bus = config.getBus();
+		boolean result = false;
+		
+		if (action.equals(Literal.parseLiteral("addOrder"))) {
+
+			System.out.println("[" + ag + "] doing: " + action);
+			
+			String id = UUID.randomUUID().toString();
+			Random r = new Random();
+
+			UpdateOrderCommand cmd = new UpdateOrderCommand(id, id, (r.nextDouble() * 59) + 1, "testClient",
+					(r.nextDouble() * 999) + 1, (r.nextDouble() * 999) + 1);
+			try {
 				bus.Send(cmd);
 				result = true;
 			} catch (Exception e) {
+				System.out.println("[" + ag + "] exception: " + e.getMessage());
 				e.printStackTrace();
 			}
-         }
-        return result;
-    }
+		} else if (action.getFunctor().equals(Literal.parseLiteral("addRoute"))) {
+			result = false;
+		} else if (action.getFunctor().equals(Literal.parseLiteral("addOrderToRoute"))) {
+			result = false;
+		}
 
-    /** Called before the end of MAS execution */
-    @Override
-    public void stop() {
-        super.stop();
-    }
+		return result;
+	}
+
+	/** Called before the end of MAS execution */
+	@Override
+	public void stop() {
+		super.stop();
+	}
 }

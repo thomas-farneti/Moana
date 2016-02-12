@@ -45,7 +45,7 @@ public class EventBus_Should implements IHandler {
 	
 	@Subscribe
 	protected void handle(OrderUpdatedEvent e){
-		this.orderIdEvent = e.getId();
+		this.orderIdEvent = e.orderId;
 	}
 
 }

@@ -27,6 +27,6 @@ public class OrdersService implements IHandler{
 			repo.addOrUpdate(o);
 		}
 		
-		publisher.Publish(new OrderUpdatedEvent(cmd.id));
+		publisher.Publish(new OrderUpdatedEvent(cmd.id,cmd.demand,cmd.clientId));
 	}
 }

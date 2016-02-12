@@ -2,10 +2,10 @@ MAS masSolver {
 
 	infrastructure: Centralised
 
-	environment: it.unibo.masSolver.enviroment.VrpEnv
+	environment: it.unibo.masSolver.env.VrpEnv
 
 	agents:
-		testAgent #3;
+		testAgent #1;
 		planner;
 		vehicle #2;
 
