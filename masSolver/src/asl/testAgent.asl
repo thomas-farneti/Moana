@@ -2,26 +2,22 @@
 
 /* Initial beliefs and rules */
 
+finish(V) :- V >= 2.
+
 /* Initial goals */
 
-!start.
+!start(0).
 
 /* Plans */
 
-+!start : true <- 
++!start(A) : not finish(A) <- 
 	.print("hello world.");
 	it.unibo.masSolver.internalActions.computeInsertionCost("testRoute","testOrder",C);
 	.print(C);
 	
 	.print("Start Sending orders");
-	.wait(2000);
-	
-	
+	.wait(100);
 	addOrder;
-	.wait(2000);
-	addOrder;
-	.wait(2000);
-	addOrder;
-	.wait(2000);
-	addOrder;
-	.wait(2000).
+	!!start(A+1).
+
++!start(V) : finish(V) <- .print("!!!!!!!!!!!!!!!!!!!!!!!!END OF ALL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!").

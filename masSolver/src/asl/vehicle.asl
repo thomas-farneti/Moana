@@ -6,6 +6,7 @@ canChallengeOrder(VehicleCapacity,OrderCapacity) :- VehicleCapacity >= OrderCapa
 full(Capacity) :- Capacity <= 10.
 
 vehicleCapacity(100).
+currentOrder(0).
 charging.
 /* Initial goals */
 
@@ -19,19 +20,16 @@ charging.
 
 //+!stop(V) : charging & ~full(V).
 
-+!stop(V) : charging & full(V) & not pendingCapacity(_) & not pendingOrder(_,_) <-
++!stop(V) : charging & full(V) & not pendingOrder(_,_) <-
 	.print("[DeleteFromPlanner]");
 	.my_name(Me); 
 	-charging;
 	.send(planner,tell,deleteVehicle(Me)).
 	/* qua poi devi salvare i tuoi risultati */
 
-@r1 [atomic]
 +!testCurentCapacity(OrderID,Content) : vehicleCapacity(V) & canChallengeOrder(V,Content) <- 
 	.print("[CanChallenge] ",V," [OrderContent] ",Content);
 	.my_name(Me);
-	-+vehicleCapacity(V-Content);
-	+pendingCapacity(OrderID);
 	/* Custom action for the computation of the Cost */
 	.random(Cost);
 	.send(planner, tell, proposalOrder(OrderID,Me,Cost)).
@@ -43,13 +41,24 @@ charging.
 	.send(planner, tell, refusalOrder(OrderID,Me));
 	-pendingOrder(OrderID,Content)[source(_)].
 
+@r1 [atomic]
++!writeCapacity(OrderID) : vehicleCapacity(V) & pendingOrder(OrderID,Content) <-
+	-pendingOrder(OrderID,Content)[source(planner)];
+	-+vehicleCapacity(V-Content);
+	+orderToServe(OrderID,Content).
+
 @r2 [atomic]
 +!restoreCapacity(OrderID) : vehicleCapacity(V) & pendingOrder(OrderID,Content) <-
-    -+vehicleCapacity(V + Content).
+    -+vehicleCapacity(V + Content);
+    -pendingOrder(OrderID,Content)[source(planner)].
+
 
 /* Belief's Plans */
 
-+pendingOrder(OrderID,Content) : charging <- !testCurentCapacity(OrderID,Content).
++pendingOrder(OrderID,Content) : charging & currentOrder(I) <-
+	-pendingOrder(I,_)[source(planner)];
+	-+currentOrder(OrderID);
+	!testCurentCapacity(OrderID,Content).
 +pendingOrder(OrderID,Content) : not charging <- 
    .print("i'm dead.");
    -pendingOrder(OrderID,Content)[source(_)];
@@ -59,16 +68,12 @@ charging.
 +accept_proposal(OrderID) : vehicleCapacity(V) <- 
     .print("[AssegnedOrder] ", OrderID);
 	-accept_proposal(OrderID)[source(_)];
-	-pendingOrder(OrderID,Content)[source(planner)];
-	+orderToServe(OrderID,Content);
-	-pendingCapacity(OrderID)[source(_)];
+	!writeCapacity(OrderID);
 	!stop(V).
 
 +reject_proposal(OrderID) : true <- 
 	.print("[RejectedOrder]");
 	-reject_proposal(OrderID)[source(planner)];
-	-pendingCapacity(OrderID)[source(_)];
-	-pendingOrder(OrderID,_)[source(planner)];
 	!restoreCapacity(OrderID).
 	
 /*
