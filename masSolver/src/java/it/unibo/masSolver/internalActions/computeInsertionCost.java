@@ -21,9 +21,9 @@ public class computeInsertionCost extends DefaultInternalAction {
         StringTerm routeId = (StringTerm) args[0];
         StringTerm orderId = (StringTerm) args[1];
         
-        //QueryOrderInsertionCost q = new QueryOrderInsertionCost(routeId.getString(),orderId.getString());
+        QueryOrderInsertionCost q = new QueryOrderInsertionCost(routeId.getString(),orderId.getString());
         
-        NumberTerm result = new NumberTermImpl(rm.query(null).cost);
+        NumberTerm result = new NumberTermImpl(rm.query(q).cost);
         
         return un.unifies(result,args[2]);
     }

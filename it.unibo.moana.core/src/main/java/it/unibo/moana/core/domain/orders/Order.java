@@ -1,33 +1,34 @@
 package it.unibo.moana.core.domain.orders;
 
 import it.unibo.moana.core.domain.IEntity;
+import it.unibo.moana.core.domain.loadingUnloadingPoints.LoadingUnloadingPoint;
 
 public class Order implements IEntity<String>{
 	
 	protected String id;
 	protected String description;
 	protected double demand;
-	protected Client client;
+	protected LoadingUnloadingPoint destination;
 	
-	public Order(String id, String description, double demand, Client client){
+	public Order(String id, String description, double demand, LoadingUnloadingPoint client){
 		this.id=id;
 		this.description = description;
-		this.client = client;
+		this.destination = client;
 		this.demand= demand;
 	}
 	
-	public String getClientDescription()
+	public String getDestinationDescription()
 	{
-		return client.description;
+		return destination.getDescription();
 	}
 	
-	public String getClientId()
+	public String getDestinationId()
 	{
-		return client.id;
+		return destination.getId();
 	}
 	
-	public Client getClient(){
-		return this.client;
+	public LoadingUnloadingPoint getDestination(){
+		return this.destination;
 	}
 
 	@Override

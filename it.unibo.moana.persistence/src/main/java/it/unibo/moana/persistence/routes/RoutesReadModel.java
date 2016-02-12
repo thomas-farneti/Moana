@@ -32,7 +32,7 @@ public class RoutesReadModel implements IRoutesReadModel {
 		
 		Order o = ordersRepo.load(query.orderId);
 		
-		double cost =  r.computeOrderInsertionCost(o.getClient().getPosition(),null);
+		double cost =  r.computeOrderInsertionCost(o.getDestination().getPosition(),null);
 		
 		QueryOrderInsertionCostResult result = new QueryOrderInsertionCostResult();
 		result.cost = cost;

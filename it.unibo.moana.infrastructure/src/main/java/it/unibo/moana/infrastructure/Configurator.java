@@ -1,6 +1,6 @@
 package it.unibo.moana.infrastructure;
 
-import it.unibo.moana.core.domain.orders.Client;
+import it.unibo.moana.core.domain.loadingUnloadingPoints.LoadingUnloadingPoint;
 import it.unibo.moana.core.domain.orders.IOrdersReadModel;
 import it.unibo.moana.core.domain.orders.IOrdersRepository;
 import it.unibo.moana.core.domain.orders.Order;
@@ -51,7 +51,7 @@ public class Configurator {
 	}
 	
 	private static void addFakeValues(){
-		Order o = new Order("testOrder", "TestOrder",0, new Client("testClient", "testClient", Position.empty()));
+		Order o = new Order("testOrder", "TestOrder",0, new LoadingUnloadingPoint("testClient", "testClient", Position.empty()));
 		config.ordersRepo.addOrUpdate(o);
 		
 		Route r = new Route("testRoute");

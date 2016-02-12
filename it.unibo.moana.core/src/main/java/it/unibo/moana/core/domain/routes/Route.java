@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import it.unibo.moana.core.domain.IEntity;
-import it.unibo.moana.core.domain.domainServices.IDistanceTimeService;
+import it.unibo.moana.core.domain.domainServices.distanceTimeService.IDistanceTimeService;
 import it.unibo.moana.core.domain.orders.Order;
 import it.unibo.moana.core.domain.valueObjects.Position;
 

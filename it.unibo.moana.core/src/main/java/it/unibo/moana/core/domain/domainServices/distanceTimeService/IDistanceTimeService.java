@@ -1,4 +1,4 @@
-package it.unibo.moana.core.domain.domainServices;
+package it.unibo.moana.core.domain.domainServices.distanceTimeService;
 
 import it.unibo.moana.core.domain.valueObjects.Position;
 
