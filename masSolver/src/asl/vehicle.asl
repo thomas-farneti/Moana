@@ -45,7 +45,8 @@ charging.
 
 @r2 [atomic]
 +!restoreCapacity(OrderID) : vehicleCapacity(V) & pendingOrder(OrderID,Content) <-
-    -+vehicleCapacity(V + Content).
+    -+vehicleCapacity(V + Content);
+    -pendingOrder(OrderID,_)[source(planner)].
 
 /* Belief's Plans */
 
@@ -68,7 +69,6 @@ charging.
 	.print("[RejectedOrder]");
 	-reject_proposal(OrderID)[source(planner)];
 	-pendingCapacity(OrderID)[source(_)];
-	-pendingOrder(OrderID,_)[source(planner)];
 	!restoreCapacity(OrderID).
 	
 /*
