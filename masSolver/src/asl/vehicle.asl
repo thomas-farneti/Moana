@@ -15,18 +15,22 @@ vehicleCapacity(100).
 	.print("hello world.", Me);
 	.send(planner,tell,vehicle(Me)).
 
-+order(I,D)[source(planner)] : vehicleCapacity(V) & canChallengeOrder(V,D) <- 
++auctionOrder(I,D)[source(planner)] : vehicleCapacity(V) & canChallengeOrder(V,D) <- 
 	.my_name(Me);
 	it.unibo.masSolver.internalActions.computeInsertionCost("testRoute","testOrder",Cost);
 	.send(planner,tell,proposal(Me,Cost)).
 
-+accept_proposal : order(I,D)[source(planner)] & count(C) <-
++accept_proposal[source(planner)] : auctionOrder(I,D)[source(planner)] & count(C) & vehicleCapacity(V) <-
 	.print("I win for the order ", I);
+	-accept_proposal[source(planner)];
 	+route(C+1,order(I,D));
 	-+count(C+1);
-	.abolish(order(I,D)[source(_)]);.
+	-+vehicleCapacity(V-D);
+	.abolish(order(I,D)[source(_)]);
+	-auctionOrder(I,D)[source(planner)].
 	
-+reject_proposal[source(planner)] : order(I,D)[source(planner)] <-
++reject_proposal[source(planner)] : auctionOrder(I,D)[source(planner)] <-
     .print("I loose for the order ", I);
     -reject_proposal[source(planner)];
-    .abolish(order(I,D)[source(_)]).
+    .abolish(order(I,D)[source(_)]);
+	-auctionOrder(I,D)[source(planner)].

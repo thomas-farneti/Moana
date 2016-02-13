@@ -6,7 +6,7 @@ state(waitingOrders).
 
 all_proposals_received
 	:- .structure(bidSent(C))	&			// number of participants
-    .count(proposal(_), NP) &           // number of proposes received
+    .count(proposal(_,_), NP) &           // number of proposes received
     .count(refusal, NR) 	&			// number of refusals received
     C = NP + NR.
 
@@ -27,13 +27,12 @@ all_proposals_received
 	-+state(waitingProposal,Id);
 	.findall(VehicleId,vehicle(VehicleId),VS);
 	.print(VS);
-	.send(VS,tell,order(Id,Dimension));
+	.send(VS,tell,auctionOrder(Id,Dimension));
 	.length(VS,C);
 	+bidSent(C).
 	
 @r2 [atomic]
 +!checkWinner <-
-	-state(waitingProposal,_);
 	-bidSent(_);
 	.findall(offer(C,A),proposal(A,C),O);
 	.min(O,offer(Wo,Wa));
@@ -42,7 +41,7 @@ all_proposals_received
 	.abolish(refusal(_));
 	+state(waitingOrders).
 
-+!announce_result([],_)<-true.
++!announce_result([],_).
 // announce to the winner
 +!announce_result([offer(_,WAg)|T],WAg) <-
 	.print("vincitore ",WAg);
@@ -58,12 +57,13 @@ all_proposals_received
 
 +vehicle(Me) <- .print("Welcome to ", Me).
 
-+order(Id,Dimension) : state(waitingOrders) <- 
++order(Id,Dimension)[source(percept)] : state(waitingOrders) <- 
 	-state(waitingOrders);
-	+state(plannig,Id);
+	-order(Id,Dimension)[source(percept)];
 	.print("Plan Order");
 	!planOrder(Id,Dimension).
 	
-+proposal(_,_) : all_proposals_received & state(waitingProposal,_)
-	<- !checkWinner.
++proposal(_,_) : all_proposals_received & state(waitingProposal,_) <- 
+	-state(waitingProposal,_);
+	!checkWinner.
 	
