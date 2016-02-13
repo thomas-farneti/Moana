@@ -18,7 +18,7 @@ vehicleCapacity(100).
 +auctionOrder(I,D)[source(planner)] : vehicleCapacity(V) & canChallengeOrder(V,D) <- 
 	.my_name(Me);
 	it.unibo.masSolver.internalActions.computeInsertionCost("testRoute","testOrder",Cost);
-	.send(planner,tell,proposal(Me,Cost)).
+	.send(planner,tell,proposal(Me,Cost,I)).
 
 +accept_proposal[source(planner)] : auctionOrder(I,D)[source(planner)] & count(C) & vehicleCapacity(V) <-
 	.print("I win for the order ", I);
@@ -34,3 +34,13 @@ vehicleCapacity(100).
     -reject_proposal[source(planner)];
     .abolish(order(I,D)[source(_)]);
 	-auctionOrder(I,D)[source(planner)].
+
++fail(I) : not (order(I,_)[source(_)] | auctionOrder(I,_)[source(_)]) <-
+	.print("fail recover for order, nothing to delete ", I);
+	-fail(I)[source(_)].
+
++fail(I) : order(I,_)[source(_)] | auctionOrder(I,_)[source(_)] <-
+	.print("fail recover for order ", I); 
+	-order(I,_)[source(_)];
+	-auctionOrder(I,_)[source(_)];
+	-fail(I)[source(_)].

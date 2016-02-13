@@ -6,7 +6,7 @@ state(waitingOrders).
 
 all_proposals_received
 	:- .structure(bidSent(C))	&			// number of participants
-    .count(proposal(_,_), NP) &           // number of proposes received
+    .count(proposal(_,_,_), NP) &           // number of proposes received
     .count(refusal, NR) 	&			// number of refusals received
     C = NP + NR.
 
@@ -17,6 +17,13 @@ all_proposals_received
 /* Plans */
 
 +!start : true <- .print("hello world.").
+
++!clean(C,D) : not proposal(A,_,_) & C==D.
++!clean(C,D) : proposal(A,_,B) | C\==D <-
+	.print("Something went wrong!"); 
+	-proposal(A,_,B)[source(A)];
+	.send(A,tell,fail(B));
+	!clean(C,D+1).
 
 //Pianifico ordine ma solo se ho almeno un veicolo
 
@@ -32,38 +39,42 @@ all_proposals_received
 	+bidSent(C).
 	
 @r2 [atomic]
-+!checkWinner <-
++!checkWinner : all_proposals_received & bidSent(B) <-
 	-bidSent(_);
-	.findall(offer(C,A),proposal(A,C),O);
+	.findall(offer(C,A),proposal(A,C,_),O);
 	.min(O,offer(Wo,Wa));
 	.print(O);
 	!announce_result(O,Wa);
 	.abolish(refusal(_));
+	.length(O,D);
+	!clean(B,D);
 	+state(waitingOrders).
 
-+!announce_result([],_).
++!announce_result([],_) : not proposal(_).
++!announce_result([],_) : proposal(_) <- 
+	-proposal(_);
+	!announce_result([],_).
 // announce to the winner
 +!announce_result([offer(_,WAg)|T],WAg) <-
 	.print("vincitore ",WAg);
 	.send(WAg,tell,accept_proposal);
-	-proposal(WAg,_)[source(WAg)];
+	-proposal(WAg,_,_)[source(WAg)];
   	!announce_result(T,WAg).
 // announce to others
 +!announce_result([offer(_,LAg)|T],WAg) <-
 	.print("perdenti");
 	.send(LAg,tell,reject_proposal);
-	-proposal(LAg,_)[source(LAg)];
+	-proposal(LAg,_,_)[source(LAg)];
 	!announce_result(T,WAg).	
 
 +vehicle(Me) <- .print("Welcome to ", Me).
 
-+order(Id,Dimension)[source(percept)] : state(waitingOrders) <- 
++order(Id,Dimension)[source(percept)] : state(waitingOrders) & not proposal(_) <- 
 	-state(waitingOrders);
 	-order(Id,Dimension)[source(percept)];
 	.print("Plan Order");
 	!planOrder(Id,Dimension).
 	
-+proposal(_,_) : all_proposals_received & state(waitingProposal,_) <- 
++proposal(_,_,_) : all_proposals_received & state(waitingProposal,_) <- 
 	-state(waitingProposal,_);
 	!checkWinner.
-	

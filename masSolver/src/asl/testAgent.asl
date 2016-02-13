@@ -2,7 +2,7 @@
 
 /* Initial beliefs and rules */
 
-finish(V) :- V >= 2.
+finish(V) :- V >= 20.
 
 /* Initial goals */
 
