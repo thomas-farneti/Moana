@@ -5,7 +5,7 @@ MAS masSolver {
 	environment: it.unibo.masSolver.env.VrpEnv
 
 	agents:
-		vehicle;
+		vehicle #2;
 		planner;
 		testAgent;
 		
