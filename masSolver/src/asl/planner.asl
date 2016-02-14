@@ -25,6 +25,7 @@ all_proposals_received
 	.print("Start PlanOrder Plan");
 	-+state(waitingProposal,Id);
 	+responseObtained(0,Id);
+	+orderProcessed(Id,Dimension);
 	.findall(VehicleId,vehicle(VehicleId),VS);
 	.print(VS);
 	.send(VS,tell,auctionOrder(Id,Dimension));
@@ -51,13 +52,17 @@ all_proposals_received
 	.print(O);
 	!checkProposal(O).
 
-+!checkProposal(P) : P==[] <- 
-	.print("here we have to spawn a new vehicle").
++!checkProposal(P) : P==[]  <- 
+	.print("NEW VEHICLE").
+	//.abolish(refusal(_,_));
+	//.create_agent(B, "/vehicle.asl");
+	//.send(B,tell,auctionOrder(I,D)).
 
 +!checkProposal(P) : P\==[] <- 
 	.min(P,offer(Wo,Wa));
 	!announce_result(P,Wa);
 	.abolish(refusal(_,_));
+	-orderProcessed(Id,Dimension);
 	+state(waitingOrders).
 	
 +!announce_result([],_).
