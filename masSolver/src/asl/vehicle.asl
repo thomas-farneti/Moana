@@ -18,6 +18,8 @@ vehicleCapacity(100).
 +auctionOrder(I,D)[source(planner)] : vehicleCapacity(V) & not canChallengeOrder(V,D) <-
 	 .my_name(Me);
 	.print("cannot serve the order ",I);
+	-auctionOrder(I,D)[source(planner)];
+	.abolish(order(I,D)[source(_)]);
 	.send(planner,tell,refusal(Me,I)).
 
 +auctionOrder(I,D)[source(planner)] : vehicleCapacity(V) & canChallengeOrder(V,D) <- 
@@ -37,7 +39,10 @@ vehicleCapacity(100).
 	.abolish(order(I,D)[source(_)]);
 	-auctionOrder(I,D)[source(planner)].
 	
-+reject_proposal[source(planner)] : auctionOrder(I,D)[source(planner)] <-
++reject_proposal[source(planner)] : 
+	auctionOrder(I,D)[source(planner)] &
+	count(C) & 
+	vehicleCapacity(V) <-
     .print("I loose for the order ", I);
     -reject_proposal[source(planner)];
     .abolish(order(I,D)[source(_)]);

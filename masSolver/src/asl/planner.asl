@@ -46,25 +46,30 @@ all_proposals_received
 
 +!checkWinner[source(_)] : all_proposals_received <-
 	-state(waitingProposal,_);
-	-bidSent(_,_);
-	-responseObtained(_,_);
 	.findall(offer(C,A),proposal(A,C,_),O);
 	.print(O);
-	!checkProposal(O).
+	!checkProposal(O);
+	+state(waitingOrders).
+	
 
-+!checkProposal(P) : P==[] & orderProcessed(Id,Dimension) <- 
++!checkProposal(P) : P==[] & bidSent(C,Id) & orderProcessed(Id,Dimension) <- 
 	.print("NEW VEHICLE");
-	./*.abolish(refusal(_,_));
+	+state(waitingProposal,Id);
 	.create_agent(B, "/vehicle.asl");
-	.send(B,tell,auctionOrder(Id,Dimension)).*/
+	.print("send Auction Order to new Vehicle");
+	.send(B,tell,auctionOrder(Id,Dimension));
+	-+bidSent(C+1,Id);
+	!checkWinner.
+
 
 +!checkProposal(P) : P\==[] <- 
 	.min(P,offer(Wo,Wa));
 	!announce_result(P,Wa);
 	.abolish(refusal(_,_));
 	-orderProcessed(Id,Dimension);
-	+state(waitingOrders).
-	
+	-bidSent(_,_);
+	-responseObtained(_,_).
+
 +!announce_result([],_).
 // announce to the winner
 +!announce_result([offer(_,WAg)|T],WAg) <-
@@ -72,6 +77,7 @@ all_proposals_received
 	.send(WAg,tell,accept_proposal);
 	-proposal(WAg,_,_)[source(WAg)];
   	!announce_result(T,WAg).
+  	
 // announce to others
 +!announce_result([offer(_,LAg)|T],WAg) <-
 	.print("perdenti");
@@ -92,3 +98,6 @@ all_proposals_received
 
 +proposal(A,B,C) : not (responseObtained(D,I) & state(waitingProposal,I)) <- -proposal(A,B,C).
 +refusal(A,B) : not (responseObtained(D,I) & state(waitingProposal,I)) <- -refusal(A,B).
+
++proposal(A,B,C) : newVehicle <- .print("Proposal From New vehicle"); -proposal(A,B,C).
++refusal(A,B,C) : newVehicle <- .print("Refusal From New vehicle, UNESPECTED!!!!!!!!"); -refusal(A,B,C).
