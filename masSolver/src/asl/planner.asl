@@ -20,7 +20,14 @@ all_proposals_received
 
 //Pianifico ordine ma solo se ho almeno un veicolo
 
-+!planOrder(Id,Dimension) : not vehicle(_) <- .print("Vehicle Created").
++!planOrder(Id,Dimension) : not vehicle(_) <- 
+	.print("No vehicle during planning!!!!!!!!???!! SPAWN NEW ONE AND SEND DIRECTLY");
+	-+state(waitingProposal,Id);
+	+responseObtained(0,Id);
+	+orderProcessed(Id,Dimension);
+	+bidSent(0,Id);
+	!checkProposal([]).
+
 +!planOrder(Id,Dimension) : vehicle(_) <-
 	.print("Start PlanOrder Plan");
 	-+state(waitingProposal,Id);
@@ -85,6 +92,9 @@ all_proposals_received
 	-proposal(LAg,_,_)[source(LAg)];
 	!announce_result(T,WAg).	
 
++!cleanFullVehicles(A): not(state(waitingOrders) & not proposal(_)) <- !cleanFullVehicles. 
++!cleanFullVehicles(A): state(waitingOrders) & not proposal(_) <- -vehicle(A)[source(A)].
+
 +vehicle(Me) <- .print("Welcome to ", Me).
 
 +order(Id,Dimension)[source(percept)] : state(waitingOrders) & not proposal(_) <- 
@@ -94,10 +104,12 @@ all_proposals_received
 	!planOrder(Id,Dimension).
 	
 +proposal(_,_,_) : responseObtained(D,I) & state(waitingProposal,I) <- -+responseObtained(D+1,I).
-+refusal(_,_) : responseObtained(D,I) & state(waitingProposal,I) <- -+responseObtained(D+1,I).
++refusal(A,_) : responseObtained(D,I) & state(waitingProposal,I) <-	-+responseObtained(D+1,I).
 
 +proposal(A,B,C) : not (responseObtained(D,I) & state(waitingProposal,I)) <- -proposal(A,B,C).
 +refusal(A,B) : not (responseObtained(D,I) & state(waitingProposal,I)) <- -refusal(A,B).
 
 +proposal(A,B,C) : newVehicle <- .print("Proposal From New vehicle"); -proposal(A,B,C).
 +refusal(A,B,C) : newVehicle <- .print("Refusal From New vehicle, UNESPECTED!!!!!!!!"); -refusal(A,B,C).
+
++vehicleFull(A) <- -vehicleFull(A)[source(_)]; !cleanFullVehicles(A).

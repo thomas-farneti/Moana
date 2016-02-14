@@ -8,8 +8,15 @@ vehicleCapacity(100).
 /* Initial goals */
 
 !start.
+!finish.
 
 /* Plans */
+
++!finish : not (vehicleCapacity(V) & full(V)) <- !finish.
++!finish : vehicleCapacity(V) & full(V) <-
+	.print("I AM FULL I CAN WRITE MY ROUTE DOWN AND LEAVE!");
+	.my_name(Me);
+	.send(planner,tell,vehicleFull(Me)).
 
 +!start : .my_name(Me) <- 
 	.print("hello world.", Me);
