@@ -5,10 +5,10 @@
 state(waitingOrders).
 
 all_proposals_received
-	:- .structure(bidSent(C))	&			// number of participants
-    .count(proposal(_,_,_), NP) &           // number of proposes received
-    .count(refusal, NR) 	&			// number of refusals received
-    C = NP + NR.
+	:-  bidSent(C,E)		&			// number of participants
+    	responseObtained(D,E) & 
+    	state(waitingProposal,E) &
+    	C==D.
 
 /* Initial goals */
 
@@ -18,42 +18,43 @@ all_proposals_received
 
 +!start : true <- .print("hello world.").
 
-+!clean(C,D) : not proposal(A,_,_) & C==D.
-+!clean(C,D) : proposal(A,_,B) | C\==D <-
-	.print("Something went wrong!"); 
-	-proposal(A,_,B)[source(A)];
-	.send(A,tell,fail(B));
-	!clean(C,D+1).
-
 //Pianifico ordine ma solo se ho almeno un veicolo
 
 +!planOrder(Id,Dimension) : not vehicle(_) <- .print("Vehicle Created").
-@r1 [atomic]
 +!planOrder(Id,Dimension) : vehicle(_) <-
 	.print("Start PlanOrder Plan");
 	-+state(waitingProposal,Id);
+	+responseObtained(0,Id);
 	.findall(VehicleId,vehicle(VehicleId),VS);
 	.print(VS);
 	.send(VS,tell,auctionOrder(Id,Dimension));
 	.length(VS,C);
-	+bidSent(C).
-	
-@r2 [atomic]
-+!checkWinner : all_proposals_received & bidSent(B) <-
-	-bidSent(_);
+	+bidSent(C,Id);
+	!checkWinner.
+
+/* 
+ *  Usefull to refresh the response obained value if not all arrived
+ */ 
++!checkWinner[source(_)] : not all_proposals_received & responseObtained(D,I) <-
+	.findall(B,proposal(A,C,I),O);
+	.length(O,E);
+	.findall(F,refusal(_,I),G);
+	.length(G,H);
+	-+responseObtained(E + H,I);
+	!checkWinner.	
+
++!checkWinner[source(_)] : all_proposals_received <-
+	-state(waitingProposal,_);
+	-bidSent(_,_);
+	-responseObtained(_,_);
 	.findall(offer(C,A),proposal(A,C,_),O);
-	.min(O,offer(Wo,Wa));
 	.print(O);
+	.min(O,offer(Wo,Wa));
 	!announce_result(O,Wa);
-	.abolish(refusal(_));
-	.length(O,D);
-	!clean(B,D);
+	.abolish(refusal(_,_));
 	+state(waitingOrders).
 
-+!announce_result([],_) : not proposal(_).
-+!announce_result([],_) : proposal(_) <- 
-	-proposal(_);
-	!announce_result([],_).
++!announce_result([],_).
 // announce to the winner
 +!announce_result([offer(_,WAg)|T],WAg) <-
 	.print("vincitore ",WAg);
@@ -75,6 +76,5 @@ all_proposals_received
 	.print("Plan Order");
 	!planOrder(Id,Dimension).
 	
-+proposal(_,_,_) : all_proposals_received & state(waitingProposal,_) <- 
-	-state(waitingProposal,_);
-	!checkWinner.
++proposal(_,_,_) : responseObtained(D,I) <- -+responseObtained(D+1,I).
++refusal(_,_) : responseObtained(D,I) <- -+responseObtained(D+1,I).
