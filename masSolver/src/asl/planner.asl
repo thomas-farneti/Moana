@@ -49,11 +49,17 @@ all_proposals_received
 	-responseObtained(_,_);
 	.findall(offer(C,A),proposal(A,C,_),O);
 	.print(O);
-	.min(O,offer(Wo,Wa));
-	!announce_result(O,Wa);
+	!checkProposal(O).
+
++!checkProposal(P) : P==[] <- 
+	.print("here we have to spawn a new vehicle").
+
++!checkProposal(P) : P\==[] <- 
+	.min(P,offer(Wo,Wa));
+	!announce_result(P,Wa);
 	.abolish(refusal(_,_));
 	+state(waitingOrders).
-
+	
 +!announce_result([],_).
 // announce to the winner
 +!announce_result([offer(_,WAg)|T],WAg) <-
