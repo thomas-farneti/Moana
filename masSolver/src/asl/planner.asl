@@ -52,11 +52,11 @@ all_proposals_received
 	.print(O);
 	!checkProposal(O).
 
-+!checkProposal(P) : P==[]  <- 
-	.print("NEW VEHICLE").
-	//.abolish(refusal(_,_));
-	//.create_agent(B, "/vehicle.asl");
-	//.send(B,tell,auctionOrder(I,D)).
++!checkProposal(P) : P==[] & orderProcessed(Id,Dimension) <- 
+	.print("NEW VEHICLE");
+	./*.abolish(refusal(_,_));
+	.create_agent(B, "/vehicle.asl");
+	.send(B,tell,auctionOrder(Id,Dimension)).*/
 
 +!checkProposal(P) : P\==[] <- 
 	.min(P,offer(Wo,Wa));
@@ -87,5 +87,8 @@ all_proposals_received
 	.print("Plan Order");
 	!planOrder(Id,Dimension).
 	
-+proposal(_,_,_) : responseObtained(D,I) <- -+responseObtained(D+1,I).
-+refusal(_,_) : responseObtained(D,I) <- -+responseObtained(D+1,I).
++proposal(_,_,_) : responseObtained(D,I) & state(waitingProposal,I) <- -+responseObtained(D+1,I).
++refusal(_,_) : responseObtained(D,I) & state(waitingProposal,I) <- -+responseObtained(D+1,I).
+
++proposal(A,B,C) : not (responseObtained(D,I) & state(waitingProposal,I)) <- -proposal(A,B,C).
++refusal(A,B) : not (responseObtained(D,I) & state(waitingProposal,I)) <- -refusal(A,B).
