@@ -45,7 +45,7 @@ public class Configurator {
 		loadingUnloadinPointRepo = new LoadingUnloadingPointsRepository(new FakeRepository<String,LoadingUnloadingPoint>());
 		
 		eventBus.registerHandler(new OrdersService(ordersRepo,loadingUnloadinPointRepo, eventBus));
-		eventBus.registerHandler(new RoutesService(routesRepo, loadingUnloadinPointRepo, eventBus));
+		eventBus.registerHandler(new RoutesService(routesRepo, loadingUnloadinPointRepo, ordersRepo, eventBus));
 	}
 	
 	public static Configurator GetInstance(){

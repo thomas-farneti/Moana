@@ -22,7 +22,6 @@ public class FakeRepository <K,E extends IEntity<K>> implements IRepository<K,E>
 	@Override
 	public void addOrUpdate(E entity) {
 		records.put(entity.getId(), entity);
-		System.out.println("added->"+entity.getId());
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public class OrdersService implements IHandler {
 	}
 
 	@Subscribe
-	public void Handle(UpdateOrderCommand cmd) {
+	public void handle(UpdateOrderCommand cmd) {
 		Order o = repo.load(cmd.id);
 		LoadingUnloadingPoint point = loadUnloadRepo.load(cmd.clientId);
 
