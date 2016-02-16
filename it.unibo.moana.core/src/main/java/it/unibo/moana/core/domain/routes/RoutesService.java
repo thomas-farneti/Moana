@@ -37,6 +37,7 @@ public class RoutesService implements IHandler {
 		
 		if(routesRepo.load(cmd.routeId)==null){
 			routesRepo.addOrUpdate(new Route(cmd.routeId,depot));
+			System.out.println("ROUTESERVICE "+cmd.routeId);
 		}
 	}
 	
@@ -55,7 +56,7 @@ public class RoutesService implements IHandler {
 			
 			Route r = new Route(id, depot);
 			
-			orders.stream().forEach(o-> r.addOrderSequential(o));
+			orders.stream().forEach(o-> {r.addOrderSequential(o); System.out.println(o);});
 			
 			this.routesRepo.addOrUpdate(r);
 			

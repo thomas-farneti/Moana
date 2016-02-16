@@ -16,11 +16,22 @@ vehicleCapacity(100).
 +!finish : vehicleCapacity(V) & full(V) <-
 	.print("I AM FULL I CAN WRITE MY ROUTE DOWN AND LEAVE!");
 	.my_name(Me);
-	.send(planner,tell,vehicleFull(Me)).
+	.send(planner,tell,vehicleFull(Me));
+	!write.
 
-+!start : .my_name(Me) <- 
++!start : true <-
+	.my_name(Me); 
 	.print("hello world.", Me);
+	.concat("",Me,MeString);
+	addRoute(MeString);
 	.send(planner,tell,vehicle(Me)).
+
++!write <-
+	.findall(I,route(C,order(I,D)),B);
+	.my_name(Me);
+	it.unibo.masSolver.internalActions.addOrdersToNewRoute(Me,B);
+	.send(planner,tell,vehicleFull(Me));
+	.kill_agent(Me).
 
 +auctionOrder(I,D)[source(planner)] : vehicleCapacity(V) & not canChallengeOrder(V,D) <-
 	 .my_name(Me);
@@ -31,7 +42,8 @@ vehicleCapacity(100).
 
 +auctionOrder(I,D)[source(planner)] : vehicleCapacity(V) & canChallengeOrder(V,D) <- 
 	.my_name(Me);
-	it.unibo.masSolver.internalActions.computeInsertionCost("testRoute","testOrder",Cost);
+	.concat("",Me,MeString);
+	it.unibo.masSolver.internalActions.computeInsertionCost(MeString,I,Cost);
 	.send(planner,tell,proposal(Me,Cost,I)).
 
 +accept_proposal[source(planner)] : 

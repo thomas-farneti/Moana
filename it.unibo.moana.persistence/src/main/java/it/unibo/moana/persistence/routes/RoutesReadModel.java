@@ -34,8 +34,9 @@ public class RoutesReadModel implements IRoutesReadModel {
 	@Override
 	public QueryOrderInsertionCostResult query(QueryOrderInsertionCost query) {
 		Route r = routesRepo.load(query.routeId);
-		
+		System.out.println("ROUTESREADMODEL "+r.getId());
 		Order o = ordersRepo.load(query.orderId);
+		System.out.println("ROUTESREADMODEL "+o.getId());
 		
 		double cost =  r.computeOrderInsertionCost(o.getDestination().getPosition(),null);
 		

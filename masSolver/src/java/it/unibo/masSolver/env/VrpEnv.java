@@ -11,6 +11,7 @@ import it.unibo.moana.infrastructure.Configurator;
 import it.unibo.moana.infrastructure.bus.IBus;
 import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
 import it.unibo.moana.messages.orders.events.OrderUpdatedEvent;
+import it.unibo.moana.messages.routes.commands.AddNewRoute;
 import jason.asSyntax.Literal;
 import jason.asSyntax.Structure;
 import jason.environment.Environment;
@@ -59,8 +60,16 @@ public class VrpEnv extends Environment implements IHandler {
 				System.out.println("[" + ag + "] exception: " + e.getMessage());
 				e.printStackTrace();
 			}
-		} else if (action.getFunctor().equals(Literal.parseLiteral("addRoute"))) {
-			result = false;
+		} else if (action.getFunctor().equals("addRoute")) {
+			final String l = action.getTerm(0).toString().replace("\"",""); // get where to move
+			try {
+				bus.Send(new AddNewRoute(l, "depot"));
+				result = true;
+			} catch (Exception e) {
+				result = false;
+				System.out.println("ERRORE");
+				e.printStackTrace();
+			}
 		} else if (action.getFunctor().equals(Literal.parseLiteral("addOrderToRoute"))) {
 			result = false;
 		}
