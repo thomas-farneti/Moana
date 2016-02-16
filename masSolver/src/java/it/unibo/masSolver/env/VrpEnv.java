@@ -3,6 +3,7 @@ package it.unibo.masSolver.env;
 
 import java.util.Random;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -12,14 +13,15 @@ import it.unibo.moana.infrastructure.bus.IBus;
 import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
 import it.unibo.moana.messages.orders.events.OrderUpdatedEvent;
 import it.unibo.moana.messages.routes.commands.AddNewRoute;
+import it.unibo.moana.messages.routes.events.RouteUpdated;
 import jason.asSyntax.Literal;
 import jason.asSyntax.Structure;
 import jason.environment.Environment;
+import jason.stdlib.foreach;
 
 public class VrpEnv extends Environment implements IHandler {
 
-	// private Logger logger =
-	// Logger.getLogger("masSolver."+VrpEnv.class.getName());
+	private Logger logger = Logger.getLogger("masSolver."+VrpEnv.class.getName());
 
 	protected Configurator config;
 
@@ -38,6 +40,14 @@ public class VrpEnv extends Environment implements IHandler {
 	public void handle(OrderUpdatedEvent event) {
 		clearAllPercepts();
 		this.addPercept(Literal.parseLiteral("order(\"" + event.orderId + "\"," + event.demand + ")"));
+	}
+	
+	@Subscribe
+	public void handle(RouteUpdated event) {
+		for (String o : event.ordersServedIds) {
+			super.getLogger().info("AGGIUNTO ORDINE"+o+" A: "+event.routeId);
+		}
+		
 	}
 
 	@Override
@@ -67,7 +77,6 @@ public class VrpEnv extends Environment implements IHandler {
 				result = true;
 			} catch (Exception e) {
 				result = false;
-				System.out.println("ERRORE");
 				e.printStackTrace();
 			}
 		} else if (action.getFunctor().equals(Literal.parseLiteral("addOrderToRoute"))) {

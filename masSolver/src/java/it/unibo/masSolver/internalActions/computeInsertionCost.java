@@ -20,9 +20,7 @@ public class computeInsertionCost extends DefaultInternalAction {
         IRoutesReadModel rm = Configurator.GetInstance().getRoutesReadModel();
         
         StringTerm routeId = (StringTerm) args[0];
-        System.out.println("ROUTE "+routeId.getString());
         StringTerm orderId = (StringTerm) args[1];
-        System.out.println("ORDER "+orderId.getString());
         
         QueryOrderInsertionCost q = new QueryOrderInsertionCost(routeId.getString(),orderId.getString());
         

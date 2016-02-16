@@ -38,7 +38,6 @@ public class RoutesService implements IHandler {
 		
 		if(routesRepo.load(cmd.routeId)==null){
 			routesRepo.addOrUpdate(new Route(cmd.routeId,depot));
-			System.out.println("ROUTESERVICE "+cmd.routeId);
 		}
 	}
 	
