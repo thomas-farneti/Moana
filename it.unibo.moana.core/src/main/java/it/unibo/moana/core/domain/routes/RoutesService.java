@@ -14,6 +14,7 @@ import it.unibo.moana.core.domainEvents.IEventPublisher;
 import it.unibo.moana.core.domainEvents.IHandler;
 import it.unibo.moana.messages.routes.commands.AddNewRoute;
 import it.unibo.moana.messages.routes.commands.AddOrdersToNewRoute;
+import it.unibo.moana.messages.routes.commands.AddOrdersToRoute;
 import it.unibo.moana.messages.routes.events.RouteUpdated;
 
 public class RoutesService implements IHandler {
@@ -55,6 +56,23 @@ public class RoutesService implements IHandler {
 			}
 			
 			Route r = new Route(id, depot);
+			
+			orders.stream().forEach(o-> {r.addOrderSequential(o); System.out.println(o);});
+			
+			this.routesRepo.addOrUpdate(r);
+			
+			this.bus.Publish(new RouteUpdated(id, cmd.ordersIds));
+		}
+	}
+	
+	@Subscribe
+	public void handle(AddOrdersToRoute cmd){
+		List<Order> orders = ordersRepo.load(cmd.ordersIds).stream().collect(Collectors.toList());
+		
+		Route r = this.routesRepo.load(cmd.routeId);
+		
+		if(!orders.isEmpty() && r != null){
+			String id = cmd.routeId;
 			
 			orders.stream().forEach(o-> {r.addOrderSequential(o); System.out.println(o);});
 			
