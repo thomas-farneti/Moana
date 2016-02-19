@@ -6,13 +6,14 @@ state(waitingOrders).
 
 all_proposals_received
 	:-  bidSent(C,E)		&			// number of participants
-    	responseObtained(D,E) & 
+    	responseObtained(D,E) &
     	state(waitingProposal,E) &
     	C==D.
 
 /* Initial goals */
 
 !start.
+!planOrder.
 
 /* Plans */
 
@@ -20,17 +21,20 @@ all_proposals_received
 
 //Pianifico ordine ma solo se ho almeno un veicolo
 
-+!planOrder(Id,Dimension) : not vehicle(_) <- 
++!planOrder : not vehicle(_) & orderToPlan(Id,Dimension) & state(waitingOrders) & not proposal(_)  <-
 	.print("No vehicle during planning!!!!!!!!???!! SPAWN NEW ONE AND SEND DIRECTLY");
 	-+state(waitingProposal,Id);
+	-orderToPlan(Id,Dimension);
 	+responseObtained(0,Id);
 	+orderProcessed(Id,Dimension);
 	+bidSent(0,Id);
-	!checkProposal([]).
+	!checkProposal([]);
+	!planOrder.
 
-+!planOrder(Id,Dimension) : vehicle(_) <-
++!planOrder : vehicle(_) & orderToPlan(Id,Dimension) & state(waitingOrders) & not proposal(_) <-
 	.print("Start PlanOrder Plan");
 	-+state(waitingProposal,Id);
+	-orderToPlan(Id,Dimension);
 	+responseObtained(0,Id);
 	+orderProcessed(Id,Dimension);
 	.findall(VehicleId,vehicle(VehicleId),VS);
@@ -38,18 +42,23 @@ all_proposals_received
 	.send(VS,tell,auctionOrder(Id,Dimension));
 	.length(VS,C);
 	+bidSent(C,Id);
-	!checkWinner.
+	!checkWinner;
+	!planOrder.
 
-/* 
++!planOrder : not 	(vehicle(_) & orderToPlan(Id,Dimension) & state(waitingOrders) & not proposal(_)) &
+			  not	(not vehicle(_) & orderToPlan(Id,Dimension) & state(waitingOrders) & not proposal(_)) <-
+	!planOrder.		  
+
+/*
  *  Usefull to refresh the response obained value if not all arrived
- */ 
+ */
 +!checkWinner[source(_)] : not all_proposals_received & responseObtained(D,I) <-
 	.findall(B,proposal(A,C,I),O);
 	.length(O,E);
 	.findall(F,refusal(_,I),G);
 	.length(G,H);
 	-+responseObtained(E + H,I);
-	!checkWinner.	
+	!checkWinner.
 
 +!checkWinner[source(_)] : all_proposals_received <-
 	-state(waitingProposal,_);
@@ -57,9 +66,9 @@ all_proposals_received
 	.print(O);
 	!checkProposal(O);
 	+state(waitingOrders).
-	
 
-+!checkProposal(P) : P==[] & bidSent(C,Id) & orderProcessed(Id,Dimension) <- 
+
++!checkProposal(P) : P==[] & bidSent(C,Id) & orderProcessed(Id,Dimension) <-
 	.print("NEW VEHICLE");
 	+state(waitingProposal,Id);
 	.create_agent(B, "/vehicle.asl");
@@ -69,7 +78,7 @@ all_proposals_received
 	!checkWinner.
 
 
-+!checkProposal(P) : P\==[] <- 
++!checkProposal(P) : P\==[] <-
 	.min(P,offer(Wo,Wa));
 	!announce_result(P,Wa);
 	.abolish(refusal(_,_));
@@ -84,25 +93,23 @@ all_proposals_received
 	.send(WAg,tell,accept_proposal);
 	-proposal(WAg,_,_)[source(WAg)];
   	!announce_result(T,WAg).
-  	
+
 // announce to others
 +!announce_result([offer(_,LAg)|T],WAg) <-
 	.print("perdenti");
 	.send(LAg,tell,reject_proposal);
 	-proposal(LAg,_,_)[source(LAg)];
-	!announce_result(T,WAg).	
+	!announce_result(T,WAg).
 
-+!cleanFullVehicles(A): not(state(waitingOrders) & not proposal(_)) <- !cleanFullVehicles. 
++!cleanFullVehicles(A): not(state(waitingOrders) & not proposal(_)) <- !cleanFullVehicles.
 +!cleanFullVehicles(A): state(waitingOrders) & not proposal(_) <- -vehicle(A)[source(A)].
 
 +vehicle(Me) <- .print("Welcome to ", Me).
 
-+order(Id,Dimension)[source(percept)] : state(waitingOrders) & not proposal(_) <- 
-	-state(waitingOrders);
++order(Id,Dimension)[source(percept)] : true <-
 	-order(Id,Dimension)[source(percept)];
-	.print("Plan Order");
-	!planOrder(Id,Dimension).
-	
+	+orderToPlan(Id,Dimension).
+
 +proposal(_,_,_) : responseObtained(D,I) & state(waitingProposal,I) <- -+responseObtained(D+1,I).
 +refusal(A,_) : responseObtained(D,I) & state(waitingProposal,I) <-	-+responseObtained(D+1,I).
 
