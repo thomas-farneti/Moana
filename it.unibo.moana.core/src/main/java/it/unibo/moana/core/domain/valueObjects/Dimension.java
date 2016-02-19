@@ -25,4 +25,8 @@ public class Dimension {
 		if(value.measure.equals(measure))
 			this.value-=value.value;
 	}
+	
+	public double getValue(){
+		return value;
+	}
 }

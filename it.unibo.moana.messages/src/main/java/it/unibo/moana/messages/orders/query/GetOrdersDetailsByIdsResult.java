@@ -11,6 +11,7 @@ public class GetOrdersDetailsByIdsResult {
 			// TODO Auto-generated constructor stub
 		}
 		public String Id;
+		public double demand;
 		public double positionLatitude;
 		public double positionLongitude;
 	}
