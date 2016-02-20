@@ -7,7 +7,6 @@ import org.mongolink.MongoSessionManager;
 
 import it.unibo.moana.core.domain.loadingUnloadingPoints.ILoadingUnloadingPointRepository;
 import it.unibo.moana.core.domain.loadingUnloadingPoints.LoadingUnloadingPoint;
-import it.unibo.moana.core.domain.orders.Order;
 import it.unibo.moana.persistence.mongo.MongoRepository;
 
 public class MongoLoadUnloadPointsRepo extends MongoRepository<String, LoadingUnloadingPoint> implements ILoadingUnloadingPointRepository{

@@ -4,9 +4,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 import it.unibo.moana.core.domain.orders.IOrdersReadModel;
 import it.unibo.moana.messages.orders.query.GetOrdersDetailsByIds;
@@ -33,22 +40,53 @@ public class ShowRoutesButtonHandler implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 			logger.info("button pressed");
-			textArea.setText("");
 			
-			HashMap<String, Collection<String>> routes = updateOrderHandler.getRoutes(); 
+			ExecutorService executor = Executors.newSingleThreadExecutor();
 			
-			routes.forEach((k,v) -> {
-				textArea.append("Route: " + k + "\n");
+			Callable<String> callable = new Callable<String>() {
+		        @Override
+		        public String call() {
+		        	HashMap<String, Collection<String>> routes = updateOrderHandler.getRoutes(); 
+					String result = "";
+		        	
+					for (String k : routes.keySet()){
+						Collection<String> v = routes.get(k);
+						
+						result += "Route: " + k + "\n";
+						
+						GetOrdersDetailsByIds query = new GetOrdersDetailsByIds();
+						query.Ids = v;
+						GetOrdersDetailsByIdsResult resultQuery = ordersReadModel.Query(query);
+						int total = 0;
+						for( OrderDetails x : resultQuery.OrdersDetails){
+							result += "\t" + "Order:" + x.Id + " Demand: " + Math.round(x.demand) + "\n";
+							total += x.demand;
+						}
+						result += "TotalDemand: " + total + " \n";
+					}
+					
+					return result;
+		        }
+		    };
+		    
+		    Future<String> future = executor.submit(callable);
+			
+		    SwingUtilities.invokeLater(new Runnable() {
 				
-				GetOrdersDetailsByIds query = new GetOrdersDetailsByIds();
-				query.Ids = v;
-				GetOrdersDetailsByIdsResult result = ordersReadModel.Query(query);
-				int total = 0;
-				for( OrderDetails x : result.OrdersDetails){
-					textArea.append("\t" + "Order:" + x.Id + " Demand: " + Math.round(x.demand) + "\n");
-					total += x.demand;
+				@Override
+				public void run() {
+					try {
+						while(!future.isDone()){}
+						textArea.setText(future.get());
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ExecutionException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
-				textArea.append("TotalDemand: " + total + " \n");
 			});
+			executor.shutdown();
 		}
 }
