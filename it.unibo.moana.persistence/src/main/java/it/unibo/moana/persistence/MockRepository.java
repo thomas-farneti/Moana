@@ -6,11 +6,11 @@ import java.util.HashMap;
 
 import it.unibo.moana.core.domain.IEntity;
 
-public class FakeRepository <K,E extends IEntity<K>> implements IRepository<K,E> {
+public class MockRepository <K,E extends IEntity<K>> implements IRepository<K,E> {
 
 	protected HashMap<K,E> records;
 	
-	public FakeRepository() {
+	public MockRepository() {
 		records = new HashMap<>();
 	}
 

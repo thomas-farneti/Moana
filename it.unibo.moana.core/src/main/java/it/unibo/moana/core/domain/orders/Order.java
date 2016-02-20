@@ -11,11 +11,23 @@ public class Order implements IEntity<String>{
 	protected Dimension demand;
 	protected LoadingUnloadingPoint destination;
 	
+	protected Order(){}
+	
 	public Order(String id, String description, Dimension demand, LoadingUnloadingPoint client){
 		this.id=id;
 		this.description = description;
 		this.destination = client;
 		this.demand= demand;
+	}
+	
+	
+	public LoadingUnloadingPoint getDestination(){
+		return this.destination;
+	}
+
+	@Override
+	public String getId() {
+		return this.id;
 	}
 	
 	public String getDestinationDescription()
@@ -28,16 +40,22 @@ public class Order implements IEntity<String>{
 		return destination.getId();
 	}
 	
-	public LoadingUnloadingPoint getDestination(){
-		return this.destination;
+	public String getDescription() {
+		return description;
 	}
 
-	@Override
-	public String getId() {
-		return this.id;
+
+	public Dimension getDemand(){
+		return this.demand;
 	}
 	
-	public Dimension getOrderDemand(){
-		return this.demand;
+	public void setDescription(String description){
+		this.description = description;
+	}
+	
+	public void updateOrder(Order o){
+		this.demand = o.getDemand();
+		this.description = o.getDescription();
+		this.destination = o.getDestination();
 	}
 }

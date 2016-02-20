@@ -4,6 +4,8 @@ public class Position {
 	protected double latitude;
 	protected double longitude;
 	
+	protected Position(){}
+	
 	public Position(double latitude,double longitude){
 		this.latitude = latitude;
 		this.longitude = longitude;

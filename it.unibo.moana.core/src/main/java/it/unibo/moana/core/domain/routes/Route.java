@@ -19,11 +19,15 @@ public class Route implements IEntity<String> {
 	protected Dimension currentLoad;
 	protected LoadingUnloadingPoint depot;
 	
+	protected Route(){
+		this.orders= new ArrayList<>();
+		this.currentLoad= Dimension.EMPTY();
+	}
+	
 	public Route(String id, LoadingUnloadingPoint depot) {
+		this();
 		this.id = id;
 		this.depot = depot;
-		this.orders = new ArrayList<>();
-		this.currentLoad = new Dimension("Volume", 0, "m3");
 	}
 
 	@Override
@@ -33,7 +37,7 @@ public class Route implements IEntity<String> {
 	
 	public void addOrderSequential(Order o){
 		this.orders.add(o);
-		this.currentLoad.sum(o.getOrderDemand());
+		this.currentLoad.sum(o.getDemand());
 	}
 	
 	public double computeOrderInsertionCost(Position orderPos, IDistanceTimeService dt){
@@ -48,4 +52,22 @@ public class Route implements IEntity<String> {
 		return this.orders.stream().map(o -> o.getId()).collect(Collectors.toList());
 	}
 
+	public ArrayList<Order> getOrders() {
+		return orders;
+	}
+
+	public Dimension getCurrentLoad() {
+		return currentLoad;
+	}
+
+	public LoadingUnloadingPoint getDepot() {
+		return depot;
+	}
+
+	public void updateRoute(Route r){
+		this.currentLoad = r.currentLoad;
+		this.depot = r.depot;
+		this.orders = r.orders;
+	}
+	
 }

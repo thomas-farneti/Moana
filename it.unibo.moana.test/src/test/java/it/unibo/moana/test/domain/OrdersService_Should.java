@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import it.unibo.moana.core.domain.orders.IOrdersReadModel;
 import it.unibo.moana.infrastructure.Configurator;
+import it.unibo.moana.infrastructure.MoanaSettings;
 import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
 import it.unibo.moana.messages.orders.query.GetOrdersDetailsByIds;
 import it.unibo.moana.messages.orders.query.GetOrdersDetailsByIdsResult;
@@ -17,7 +18,7 @@ public class OrdersService_Should {
 	@Test
 	public void test() throws Exception {	 		
 
-		Configurator config = Configurator.GetInstance();
+		Configurator config = Configurator.GetInstance(new MoanaSettings().getTestDefault());
 		
 		String id = UUID.randomUUID().toString();
 		UpdateOrderCommand cmd = new UpdateOrderCommand(id, id, "testClient", 0, "Volume", "m3", 10.0, 10.0);

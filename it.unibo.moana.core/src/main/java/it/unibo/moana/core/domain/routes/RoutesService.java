@@ -68,12 +68,14 @@ public class RoutesService implements IHandler {
 	public void handle(AddOrdersToRoute cmd){
 		List<Order> orders = ordersRepo.load(cmd.ordersIds).stream().collect(Collectors.toList());
 		
+		//orders.stream().forEach(o -> System.out.println(o.getId()));
+		
 		Route r = this.routesRepo.load(cmd.routeId);
 		
 		if(!orders.isEmpty() && r != null){
 			String id = cmd.routeId;
 			
-			orders.stream().forEach(o-> {r.addOrderSequential(o); System.out.println(o);});
+			orders.stream().forEach(o-> {r.addOrderSequential(o);});
 			
 			this.routesRepo.addOrUpdate(r);
 			

@@ -6,11 +6,11 @@ import it.unibo.moana.core.domain.routes.IRoutesRepository;
 import it.unibo.moana.core.domain.routes.Route;
 import it.unibo.moana.persistence.IRepository;
 
-public class RoutesRepository implements IRoutesRepository {
+public class MockRoutesRepository implements IRoutesRepository {
 
 	IRepository<String, Route> repo;
 	
-	public RoutesRepository(IRepository<String, Route> repo) {
+	public MockRoutesRepository(IRepository<String, Route> repo) {
 		this.repo = repo;
 	}
 

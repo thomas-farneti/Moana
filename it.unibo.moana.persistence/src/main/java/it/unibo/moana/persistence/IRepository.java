@@ -4,11 +4,11 @@ import java.util.Collection;
 
 import it.unibo.moana.core.domain.IEntity;
 
-public interface IRepository <K,E extends IEntity<K>>{
+public interface IRepository <K,V extends IEntity<K>>{
 
-	 void remove(E entity);
-	 void addOrUpdate(E entity); 
+	 void remove(V entity);
+	 void addOrUpdate(V entity); 
 	 
-	 Collection<E> load(Collection<K> ids);
-	 E load(K id);
+	 Collection<V> load(Collection<K> ids);
+	 V load(K id);
 }

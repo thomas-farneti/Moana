@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import it.unibo.moana.infrastructure.Configurator;
+import it.unibo.moana.infrastructure.MoanaSettings;
 import it.unibo.moana.messages.routes.commands.AddOrdersToNewRoute;
 import jason.*;
 import jason.asSemantics.*;
@@ -29,7 +30,7 @@ public class addOrdersToNewRoute extends DefaultInternalAction {
 			ts.getAg().getLogger().info(termId.getString());
 		}
         
-        Configurator.GetInstance().getBus().Send(new AddOrdersToNewRoute(routeId.getString(),ordersIds,"depot"));
+        Configurator.GetInstance(new MoanaSettings().getDefault()).getBus().Send(new AddOrdersToNewRoute(routeId.getString(),ordersIds,"depot"));
         
         return true;
     }

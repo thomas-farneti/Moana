@@ -4,6 +4,7 @@ package it.unibo.masSolver.internalActions;
 
 import it.unibo.moana.core.domain.routes.IRoutesReadModel;
 import it.unibo.moana.infrastructure.Configurator;
+import it.unibo.moana.infrastructure.MoanaSettings;
 import it.unibo.moana.messages.routes.query.QueryOrderInsertionCost;
 import it.unibo.moana.messages.routes.query.QueryOrderInsertionCostResult;
 import jason.asSemantics.*;
@@ -17,7 +18,7 @@ public class computeInsertionCost extends DefaultInternalAction {
         // execute the internal action
         ts.getAg().getLogger().info("executing internal action 'it.unibo.masSolver.internalActions.computeInsertionCost'");
         
-        IRoutesReadModel rm = Configurator.GetInstance().getRoutesReadModel();
+        IRoutesReadModel rm = Configurator.GetInstance(new MoanaSettings().getDefault()).getRoutesReadModel();
         
         StringTerm routeId = (StringTerm) args[0];
         StringTerm orderId = (StringTerm) args[1];

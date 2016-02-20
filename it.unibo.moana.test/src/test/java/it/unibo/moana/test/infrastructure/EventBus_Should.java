@@ -11,6 +11,7 @@ import com.google.common.eventbus.Subscribe;
 import it.unibo.moana.core.domain.orders.IOrdersReadModel;
 import it.unibo.moana.core.domainEvents.IHandler;
 import it.unibo.moana.infrastructure.Configurator;
+import it.unibo.moana.infrastructure.MoanaSettings;
 import it.unibo.moana.infrastructure.bus.IBus;
 import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
 import it.unibo.moana.messages.orders.events.OrderUpdatedEvent;
@@ -20,7 +21,7 @@ public class EventBus_Should implements IHandler {
 	protected String orderIdEvent;
 	@Test
 	public void test() throws Exception {
-		Configurator config = Configurator.GetInstance();
+		Configurator config = Configurator.GetInstance(new MoanaSettings().getTestDefault());
 		
 		IBus bus = config.getBus();
 		

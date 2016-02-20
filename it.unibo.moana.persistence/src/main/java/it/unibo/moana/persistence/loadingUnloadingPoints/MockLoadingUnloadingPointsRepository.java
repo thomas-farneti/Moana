@@ -6,11 +6,11 @@ import it.unibo.moana.core.domain.loadingUnloadingPoints.ILoadingUnloadingPointR
 import it.unibo.moana.core.domain.loadingUnloadingPoints.LoadingUnloadingPoint;
 import it.unibo.moana.persistence.IRepository;
 
-public class LoadingUnloadingPointsRepository implements ILoadingUnloadingPointRepository{
+public class MockLoadingUnloadingPointsRepository implements ILoadingUnloadingPointRepository{
 
 	protected IRepository<String, LoadingUnloadingPoint> repo;
 	
-	public LoadingUnloadingPointsRepository(IRepository<String, LoadingUnloadingPoint> repo) {
+	public MockLoadingUnloadingPointsRepository(IRepository<String, LoadingUnloadingPoint> repo) {
 		this.repo = repo;
 	}
 

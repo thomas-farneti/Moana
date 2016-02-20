@@ -29,11 +29,10 @@ public class OrdersService implements IHandler {
 		LoadingUnloadingPoint point = loadUnloadRepo.load(cmd.clientId);
 
 		if (o == null) {
-			o = new Order(cmd.id, cmd.description,
-					new Dimension(cmd.dimensionType, cmd.dimensionValue, cmd.dimensionMeasure), point);
-			repo.addOrUpdate(o);
+			o = new Order(cmd.id, cmd.description,new Dimension(cmd.dimensionType, cmd.dimensionValue, cmd.dimensionMeasure), point);
 		}
 
+		repo.addOrUpdate(o);
 		publisher.Publish(new OrderUpdatedEvent(cmd.id, cmd.dimensionValue, cmd.clientId));
 	}
 }

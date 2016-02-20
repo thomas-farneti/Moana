@@ -5,6 +5,8 @@ public class Dimension {
 	protected double value;
 	protected String measure;
 	
+	protected Dimension() {};
+	
 	public Dimension(String type, double value, String measure) {
 		super();
 		this.type = type;
@@ -24,5 +26,9 @@ public class Dimension {
 	public void subtract(Dimension value){
 		if(value.measure.equals(measure))
 			this.value-=value.value;
+	}
+	
+	public double getValue(){
+		return this.value;
 	}
 }

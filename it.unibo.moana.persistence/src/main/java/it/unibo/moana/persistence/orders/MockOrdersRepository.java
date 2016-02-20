@@ -6,11 +6,11 @@ import it.unibo.moana.core.domain.orders.IOrdersRepository;
 import it.unibo.moana.core.domain.orders.Order;
 import it.unibo.moana.persistence.IRepository;
 
-public class OrdersRepository implements IOrdersRepository {
+public class MockOrdersRepository implements IOrdersRepository {
 
 	private IRepository<String, Order> repository;
 	
-	public OrdersRepository(IRepository<String, Order> repository) {
+	public MockOrdersRepository(IRepository<String, Order> repository) {
 		this.repository = repository;
 	}
 

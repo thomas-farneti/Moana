@@ -8,6 +8,8 @@ public class LoadingUnloadingPoint implements IEntity<String> {
 	protected String description;
 	protected Position position;
 	
+	protected LoadingUnloadingPoint(){}
+	
 	public LoadingUnloadingPoint(String id, String description, Position position){
 		this.id = id;
 		this.description = description;
@@ -38,6 +40,9 @@ public class LoadingUnloadingPoint implements IEntity<String> {
 		this.position = position;
 	}
 	
-	
+	public void updateLoadingUnloadingPoint(LoadingUnloadingPoint p){
+		this.description = p.description;
+		this.position = p.position;
+	}
 	
 }

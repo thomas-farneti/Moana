@@ -1,6 +1,7 @@
 package it.unibo.masSolver.env;
 // Environment code for project masSolver
 
+import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -9,6 +10,7 @@ import com.google.common.eventbus.Subscribe;
 
 import it.unibo.moana.core.domainEvents.IHandler;
 import it.unibo.moana.infrastructure.Configurator;
+import it.unibo.moana.infrastructure.MoanaSettings;
 import it.unibo.moana.infrastructure.bus.IBus;
 import it.unibo.moana.messages.orders.commands.UpdateOrderCommand;
 import it.unibo.moana.messages.orders.events.OrderUpdatedEvent;
@@ -30,7 +32,12 @@ public class VrpEnv extends Environment implements IHandler {
 	public void init(String[] args) {
 		super.init(args);
 
-		config = Configurator.GetInstance();
+		try {
+			config = Configurator.GetInstance(new MoanaSettings().getDefault());
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		config.getBus().registerHandler(this);
 		clearAllPercepts();
