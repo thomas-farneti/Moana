@@ -3,6 +3,9 @@ package it.unibo.moana.infrastructure;
 import java.net.UnknownHostException;
 
 import org.mongolink.MongoSessionManager;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
 import org.mongolink.Settings;
 import org.mongolink.UpdateStrategies;
 import org.mongolink.domain.mapper.ContextBuilder;

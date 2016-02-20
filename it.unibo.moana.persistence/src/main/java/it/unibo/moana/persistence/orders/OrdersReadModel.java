@@ -25,7 +25,7 @@ public class OrdersReadModel implements IOrdersReadModel {
 		for (Order order : this.repo.load(query.Ids)) {
 			GetOrdersDetailsByIdsResult.OrderDetails detail = res.new OrderDetails();
 			detail.Id= order.getId();
-			
+			detail.demand = order.getOrderDemand().getValue();
 			details.add(detail);
 		}
 		

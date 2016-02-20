@@ -31,4 +31,8 @@ public class Dimension {
 	public double getValue(){
 		return this.value;
 	}
+	
+	public double getValue(){
+		return value;
+	}
 }
