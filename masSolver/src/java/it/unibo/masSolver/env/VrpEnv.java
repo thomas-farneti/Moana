@@ -39,13 +39,13 @@ public class VrpEnv extends Environment implements IHandler {
 		try {
 			config = Configurator.GetInstance(new MoanaSettings().getDefault());
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		
 		updateOrderHandler = new UpdateOrderHandler();
 		ShowRoutesButtonHandler buttonHandler = new ShowRoutesButtonHandler(updateOrderHandler, config.getOrdersReadModel(),super.getLogger());
 		gui = new OutputGui(buttonHandler);
 		buttonHandler.setTextArea(gui.getArea());
-		}
 		
 		config.getBus().registerHandler(this);
 		config.getBus().registerHandler(updateOrderHandler);
