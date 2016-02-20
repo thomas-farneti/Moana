@@ -10,9 +10,14 @@ import it.unibo.moana.messages.routes.events.RouteUpdated;
 public class UpdateOrderHandler implements IHandler {
 
 	private HashMap<String,Collection<String>> routes;
+	private ShowRoutesHandler handler;
 	
 	public UpdateOrderHandler() {
 		routes = new HashMap<String,Collection<String>>();	
+	}
+	
+	public void setHandler(ShowRoutesHandler Handler){
+		this.handler = Handler;
 	}
 	
 	@Subscribe
@@ -23,9 +28,10 @@ public class UpdateOrderHandler implements IHandler {
 		else 
 			currentValues = event.ordersServedIds;
 		routes.put(event.routeId, currentValues);
+		handler.updateOutput();
 	}
 	
-	public HashMap<String,Collection<String>> getRoutes(){
+	public synchronized HashMap<String,Collection<String>> getRoutes(){
 		return routes;
 	}
 }

@@ -1,24 +1,19 @@
 package it.unibo.masSolver.output.gui;
 
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.*;
 
-import it.unibo.masSolver.output.ShowRoutesButtonHandler;;
 
 public class OutputGui extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JButton showRoutes;
 	private JScrollPane jScrollPane1;
 	private JTextArea textArea;
-	private ActionListener buttonHandler;
 
-	public OutputGui(ActionListener buttonHandler) {
+	public OutputGui() {
 		super("Moana Routes Output");
-		this.buttonHandler = buttonHandler;
 		initComponents();
 	}
 
@@ -27,7 +22,7 @@ public class OutputGui extends JFrame {
 	}
 	
 	private void initComponents() {
-		showRoutes = new JButton("Show Routes");
+		
 		textArea = new JTextArea();
 		
 		
@@ -49,8 +44,7 @@ public class OutputGui extends JFrame {
 		ParallelGroup h2 = layout.createParallelGroup(GroupLayout.Alignment.TRAILING);
 		// Add a scroll panel and a label to the parallel group h2
 		h2.addComponent(jScrollPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE);
-		h2.addComponent(showRoutes, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE);
-
+		
 		// Add a container gap to the sequential group h1
 		h1.addContainerGap();
 		// Add the group h2 to the group h1
@@ -68,7 +62,6 @@ public class OutputGui extends JFrame {
 		// Add a container gap to the sequential group v1
 		v1.addContainerGap();
 		// Add a label to the sequential group v1
-		v1.addComponent(showRoutes);
 		v1.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED);
 		// Add scroll panel to the sequential group v1
 		v1.addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE);
@@ -78,7 +71,6 @@ public class OutputGui extends JFrame {
 		// Create the vertical group
 		layout.setVerticalGroup(vGroup);
 		
-		showRoutes.addActionListener(buttonHandler);
 		pack();
 	}
 }

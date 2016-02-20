@@ -1,10 +1,14 @@
 // Agent vehicle in project masSolver
 
 /* Initial beliefs and rules */
-canChallengeOrder(VehicleCapacity,OrderCapacity) :- VehicleCapacity >= OrderCapacity.
-full(Capacity) :- Capacity <= 10.
+canChallengeOrder(VehicleCapacity,OrderCapacity) :-
+	threshold(V) & 
+	((VehicleCapacity - V) >= OrderCapacity).
+full(Capacity) :- threshold(V) &  Capacity <= V.
 count(0).
+threshold(10).
 vehicleCapacity(100).
+allAcceptedVehicleCapacity(100).
 /* Initial goals */
 
 !start.
@@ -35,18 +39,20 @@ vehicleCapacity(100).
 	it.unibo.masSolver.internalActions.computeInsertionCost(A,I,Cost);
 	.send(planner,tell,proposal(Me,Cost,I)).
 
-+auctionOrder(I,D)[source(planner)] : vehicleCapacity(V) & not canChallengeOrder(V,D) <-
++auctionOrder(I,D)[source(planner)] : allAcceptedVehicleCapacity(V) & not canChallengeOrder(V,D) <-
 	 .my_name(Me);
 	.print("cannot serve the order ",I);
 	-auctionOrder(I,D)[source(planner)];
 	.abolish(order(I,D)[source(_)]);
 	.send(planner,tell,refusal(Me,I)).
 
-+auctionOrder(I,D)[source(planner)] : vehicleCapacity(V) & canChallengeOrder(V,D) & not routeName(A) <-
++auctionOrder(I,D)[source(planner)] : allAcceptedVehicleCapacity(V) & canChallengeOrder(V,D) & not routeName(A) <-
 	.my_name(Me);
+	-+allAcceptedVehicleCapacity(V-D);
 	!createRoute(Me);
 	!computeCostAndSend(I).
-+auctionOrder(I,D)[source(planner)] : vehicleCapacity(V) & canChallengeOrder(V,D) & routeName(A) <-
++auctionOrder(I,D)[source(planner)] : allAcceptedVehicleCapacity(V) & canChallengeOrder(V,D) & routeName(A) <-
+	-+allAcceptedVehicleCapacity(V-D);
 	!computeCostAndSend(I).
 
 +accept_proposal[source(planner)] :
@@ -60,6 +66,7 @@ vehicleCapacity(100).
 	it.unibo.masSolver.internalActions.addOrderToRoute(A,[I]);
 	-+count(C+1);
 	-+vehicleCapacity(V-D);
+	-+allAcceptedVehicleCapacity(V-D);
 	.abolish(order(I,D)[source(percept)]);
 	-auctionOrder(I,D)[source(planner)].
 
@@ -68,6 +75,7 @@ vehicleCapacity(100).
 	count(C) &
 	vehicleCapacity(V) <-
     .print("I loose for the order ", I);
+    -+allAcceptedVehicleCapacity(V);
     -reject_proposal[source(planner)];
     .abolish(order(I,D)[source(percept)]);
     -auctionOrder(I,D)[source(planner)].

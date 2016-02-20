@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import com.google.common.eventbus.Subscribe;
 
-import it.unibo.masSolver.output.ShowRoutesButtonHandler;
+import it.unibo.masSolver.output.ShowRoutesHandler;
 import it.unibo.masSolver.output.UpdateOrderHandler;
 import it.unibo.masSolver.output.gui.OutputGui;
 import it.unibo.moana.core.domainEvents.IHandler;
@@ -43,9 +43,10 @@ public class VrpEnv extends Environment implements IHandler {
 		}
 		
 		updateOrderHandler = new UpdateOrderHandler();
-		ShowRoutesButtonHandler buttonHandler = new ShowRoutesButtonHandler(updateOrderHandler, config.getOrdersReadModel(),super.getLogger());
-		gui = new OutputGui(buttonHandler);
+		ShowRoutesHandler buttonHandler = new ShowRoutesHandler(updateOrderHandler, config.getOrdersReadModel(),super.getLogger());
+		gui = new OutputGui();
 		buttonHandler.setTextArea(gui.getArea());
+		updateOrderHandler.setHandler(buttonHandler);
 		
 		config.getBus().registerHandler(this);
 		config.getBus().registerHandler(updateOrderHandler);
