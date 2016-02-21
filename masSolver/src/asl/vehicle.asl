@@ -35,25 +35,30 @@ allAcceptedVehicleCapacity(100).
 	+routeName(MeString);
 	addRoute(MeString).
 
-+!computeCostAndSend(I) : .my_name(Me) & routeName(A) <-
++!testCapacityAndSend(I,D) : 
+		.my_name(Me) &
+		 routeName(A) &
+		 allAcceptedVehicleCapacity(V) &
+		 canChallengeOrder(V,D) <-
+	-+allAcceptedVehicleCapacity(V-D);
 	it.unibo.masSolver.internalActions.computeInsertionCost(A,I,Cost);
 	.send(planner,tell,proposal(Me,Cost,I)).
 
-+auctionOrder(I,D)[source(planner)] : allAcceptedVehicleCapacity(V) & not canChallengeOrder(V,D) <-
-	 .my_name(Me);
++!testCapacityAndSend(I,D) : 
+		allAcceptedVehicleCapacity(V) & 
+		not canChallengeOrder(V,D) <-
+	.my_name(Me);
 	.print("cannot serve the order ",I);
 	-auctionOrder(I,D)[source(planner)];
 	.abolish(order(I,D)[source(_)]);
-	.send(planner,tell,refusal(Me,I)).
+	.send(planner,tell,refusal(Me,I)).	 
 
-+auctionOrder(I,D)[source(planner)] : allAcceptedVehicleCapacity(V) & canChallengeOrder(V,D) & not routeName(A) <-
++auctionOrder(I,D)[source(planner)] : not routeName(A) <-
 	.my_name(Me);
-	-+allAcceptedVehicleCapacity(V-D);
 	!createRoute(Me);
-	!computeCostAndSend(I).
-+auctionOrder(I,D)[source(planner)] : allAcceptedVehicleCapacity(V) & canChallengeOrder(V,D) & routeName(A) <-
-	-+allAcceptedVehicleCapacity(V-D);
-	!computeCostAndSend(I).
+	!testCapacityAndSend(I,D).
++auctionOrder(I,D)[source(planner)] : routeName(A) <-
+	!testCapacityAndSend(I,D).
 
 +accept_proposal[source(planner)] :
 	auctionOrder(I,D)[source(planner)] &

@@ -60,9 +60,9 @@ all_proposals_received
 	-+responseObtained(E + H,I);
 	!checkWinner.
 
-+!checkWinner[source(_)] : all_proposals_received <-
++!checkWinner[source(_)] : responseObtained(D,I) & all_proposals_received <-
 	-state(waitingProposal,_);
-	.findall(offer(C,A),proposal(A,C,_),O);
+	.findall(offer(C,A),proposal(A,C,I),O);
 	.print(O);
 	!checkProposal(O);
 	+state(waitingOrders).

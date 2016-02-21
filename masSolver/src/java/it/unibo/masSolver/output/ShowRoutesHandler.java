@@ -71,23 +71,16 @@ public class ShowRoutesHandler {
 		    
 		    Future<String> future = executor.submit(callable);
 			
-		    SwingUtilities.invokeLater(new Runnable() {
-				
-				@Override
-				public void run() {
-					try {
-						while(!future.isDone()){}
-						String output = future.get();
-						if (!output.equals(""))
-							textArea.setText(output);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (ExecutionException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			});
+			try {
+				String output = future.get();
+				if (!output.equals(""))
+					textArea.setText(output);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 }
