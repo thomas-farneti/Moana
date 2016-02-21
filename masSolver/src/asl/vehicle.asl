@@ -6,7 +6,10 @@ canChallengeOrder(VehicleCapacity,OrderCapacity) :-
 	
 full(Capacity) :- threshold(V) &  Capacity <= V.
 count(0).
+ //this threashold in reality in an attenuator of the capacity the vehicle cannot load more than capacity - threshold
 threshold(0).
+//This threshold is when the vehicle can say be really full. Must be minor than the previous.
+thresholdfull :- vehicleCapacity(V) & full(V-5).
 vehicleCapacity(100).
 allAcceptedVehicleCapacity(100).
 /* Initial goals */
@@ -18,7 +21,7 @@ allAcceptedVehicleCapacity(100).
 
 +!finish : not (vehicleCapacity(V) & full(V)) <- !finish.
 @r 
-+!finish[priority(20)] : vehicleCapacity(V) & full(V) <-
++!finish[priority(20)] : thresholdfull <-
 	.print("I AM FULL I CAN WRITE MY ROUTE DOWN AND LEAVE!");
 	.my_name(Me);
 	!createRoute(Me);
