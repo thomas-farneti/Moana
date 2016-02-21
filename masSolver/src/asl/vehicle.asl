@@ -2,8 +2,8 @@
 
 /* Initial beliefs and rules */
 canChallengeOrder(VehicleCapacity,OrderCapacity) :-
-	threshold(V) & 
-	((VehicleCapacity - V) >= OrderCapacity).
+	not full(VehicleCapacity - OrderCapacity).
+	
 full(Capacity) :- threshold(V) &  Capacity <= V.
 count(0).
 threshold(10).
@@ -17,7 +17,8 @@ allAcceptedVehicleCapacity(100).
 /* Plans */
 
 +!finish : not (vehicleCapacity(V) & full(V)) <- !finish.
-+!finish : vehicleCapacity(V) & full(V) <-
+@r 
++!finish[priority(20)] : vehicleCapacity(V) & full(V) <-
 	.print("I AM FULL I CAN WRITE MY ROUTE DOWN AND LEAVE!");
 	.my_name(Me);
 	.send(planner,tell,vehicleFull(Me));
@@ -53,29 +54,22 @@ allAcceptedVehicleCapacity(100).
 	.abolish(order(I,D)[source(_)]);
 	.send(planner,tell,refusal(Me,I)).	 
 
-+auctionOrder(I,D)[source(planner)] : not routeName(A) <-
-	.my_name(Me);
-	!createRoute(Me);
-	!testCapacityAndSend(I,D).
-+auctionOrder(I,D)[source(planner)] : routeName(A) <-
-	!testCapacityAndSend(I,D).
-
-+accept_proposal[source(planner)] :
-	auctionOrder(I,D)[source(planner)] &
++!winner(I) : auctionOrder(I,D)[source(planner)] &
 	count(C) &
 	vehicleCapacity(V) &
 	routeName(A) <-
+	-+vehicleCapacity(V-D);
+	-+allAcceptedVehicleCapacity(V-D);
 	.print("I win for the order ", I);
 	-accept_proposal[source(planner)];
 	+route(C+1,order(I,D));
 	it.unibo.masSolver.internalActions.addOrderToRoute(A,[I]);
 	-+count(C+1);
-	-+vehicleCapacity(V-D);
-	-+allAcceptedVehicleCapacity(V-D);
 	.abolish(order(I,D)[source(percept)]);
-	-auctionOrder(I,D)[source(planner)].
+	-auctionOrder(I,D)[source(planner)];
+	-computing(I).
 
-+reject_proposal[source(planner)] :
++!looser(I):
 	auctionOrder(I,D)[source(planner)] &
 	count(C) &
 	vehicleCapacity(V) <-
@@ -83,4 +77,25 @@ allAcceptedVehicleCapacity(100).
     -+allAcceptedVehicleCapacity(V);
     -reject_proposal[source(planner)];
     .abolish(order(I,D)[source(percept)]);
-    -auctionOrder(I,D)[source(planner)].
+    -auctionOrder(I,D)[source(planner)];
+    -computing(I).
+
+
++auctionOrder(I,D)[source(planner)] : computing(_) & vehicleCapacity(V)<-
+	!testCapacityAndSend(I,V).
+	
+
++auctionOrder(I,D)[source(planner)] : not routeName(A) & not computing(_) <-
+	+computing(I);
+	.my_name(Me);
+	!createRoute(Me);
+	!testCapacityAndSend(I,D).
++auctionOrder(I,D)[source(planner)] : routeName(A) & not computing(_) <-
+	+computing(I);
+	!testCapacityAndSend(I,D).
+
++accept_proposal(Id)[source(planner)] <-
+	!winner(Id).
+
++reject_proposal(Id)[source(planner)] <-
+	!looser(Id).

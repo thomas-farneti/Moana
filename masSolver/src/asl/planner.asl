@@ -78,28 +78,28 @@ all_proposals_received
 	!checkWinner.
 
 
-+!checkProposal(P) : P\==[] <-
++!checkProposal(P) : P\==[] & orderProcessed(Id,Dimension)<-
 	.min(P,offer(Wo,Wa));
-	!announce_result(P,Wa);
+	!announce_result(P,Wa,Id);
 	.abolish(refusal(_,_));
 	-orderProcessed(Id,Dimension);
 	-bidSent(_,_);
 	-responseObtained(_,_).
 
-+!announce_result([],_).
++!announce_result([],_,_).
 // announce to the winner
-+!announce_result([offer(_,WAg)|T],WAg) <-
-	.print("vincitore ",WAg);
-	.send(WAg,tell,accept_proposal);
++!announce_result([offer(_,WAg)|T],WAg,Id) <-
+	.print("vincitore ",WAg , "per ordine: ", Id);
+	.send(WAg,tell,accept_proposal(Id));
 	-proposal(WAg,_,_)[source(WAg)];
-  	!announce_result(T,WAg).
+  	!announce_result(T,WAg,Id).
 
 // announce to others
-+!announce_result([offer(_,LAg)|T],WAg) <-
++!announce_result([offer(_,LAg)|T],WAg,Id) <-
 	.print("perdenti");
-	.send(LAg,tell,reject_proposal);
+	.send(LAg,tell,reject_proposal(Id));
 	-proposal(LAg,_,_)[source(LAg)];
-	!announce_result(T,WAg).
+	!announce_result(T,WAg,Id).
 
 +!cleanFullVehicles(A): not(state(waitingOrders) & not proposal(_)) <- !cleanFullVehicles.
 +!cleanFullVehicles(A): state(waitingOrders) & not proposal(_) <- -vehicle(A)[source(A)].
