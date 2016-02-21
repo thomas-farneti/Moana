@@ -2,7 +2,7 @@
 
 /* Initial beliefs and rules */
 
-finish(V) :- V >= 30.
+finish(V) :- V >= 200.
 
 /* Initial goals */
 
@@ -12,7 +12,7 @@ finish(V) :- V >= 30.
 
 +!start(A) : not finish(A) <- 
 	.print("test agent Start");
-	.wait(1000);
+	.wait(500);
 	//it.unibo.masSolver.internalActions.computeInsertionCost("testRoute","testOrder",C);
 	//.print(C);
 	
