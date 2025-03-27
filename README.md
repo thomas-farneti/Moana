@@ -100,20 +100,3 @@ Have an idea to improve Moana? Want to simulate a new dispatch strategy?
 2. Create a branch: `git checkout -b feature/amazing-feature`
 3. Push your changes and open a PR
 4. Discuss improvements or join our roadmap!
-
----
-
-## 📜 License
-
-This project does not currently specify a license. Contact the author [@thomas-farneti](https://github.com/thomas-farneti) for more details.
-
----
-
-## 👋 About the Author
-
-**Thomas Farneti** is passionate about distributed systems, intelligent agents, and cloud-native architectures.  
-Follow him on [GitHub](https://github.com/thomas-farneti) for more cool projects like this.
-
----
-
-> “Like water, intelligent agents adapt their flow. Moana makes them work together.”
